@@ -22,6 +22,7 @@ class Miner(Machine):
     def to_dict(self):
         obj = super().to_dict()
         obj["type"] = "miner"
+        del obj["inventory"]
         return obj
 
     @staticmethod

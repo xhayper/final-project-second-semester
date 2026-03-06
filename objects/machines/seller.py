@@ -16,6 +16,7 @@ class Seller(Machine):
     def to_dict(self):
         obj = super().to_dict()
         obj["type"] = "seller"
+        del obj["inventory"]
         return obj
 
     @staticmethod
