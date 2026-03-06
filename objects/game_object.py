@@ -9,11 +9,30 @@ class GameObject:
     def __init__(self, game: "Game", pos=(0, 0)):
         self.game = game
         self.id = f"{self.__class__.__name__}_{id(self)}"
-        self.position = (float(pos[0]), float(pos[1]))
+        self._position = (float(pos[0]), float(pos[1]))
         self.direction = 1
         self.cost = 9999999999999999999
-        self._old_position = self.grid_position
         self.force_render = False
+
+    @property
+    def position(self):
+        return self._position
+
+    @position.setter
+    def position(self, value):
+        old_position_grid = self.grid_position
+        self._position = value
+
+        position_map = self.game.position_map
+
+        if old_position_grid in position_map:
+            if self in position_map[old_position_grid]:
+                position_map[old_position_grid].remove(self)
+            if len(position_map[old_position_grid]) <= 0:
+                del position_map[old_position_grid]
+
+        if self.grid_position not in position_map:
+            position_map[self.grid_position] = [self]
 
     @property
     def grid_position(self):
@@ -78,7 +97,10 @@ class GameObject:
         dx, dy = self._direction_vector()
         x, y = self.grid_position
         return (x + dy, y - dx)
-    
+
+    def update(self, dt: int, events: List[pygame.event.Event]):
+        pass
+
     def move(self, position):
         self.position = position
         self.snap_to_grid()
@@ -110,23 +132,6 @@ class GameObject:
                     )
                 ),
             )
-
-    def update(self, dt: int, events: List[pygame.Event]):
-        if self._old_position == self.grid_position:
-            return
-
-        position_map = self.game.position_map
-
-        if self._old_position in position_map:
-            if self in position_map[self._old_position]:
-                position_map[self._old_position].remove(self)
-            if len(position_map[self._old_position]) <= 0:
-                del position_map[self._old_position]
-
-        if self.grid_position not in position_map:
-            position_map[self.grid_position] = [self]
-
-        self._old_position = self.grid_position
 
     def add_to_game(self):
         self.game.add_object(self)

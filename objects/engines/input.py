@@ -74,6 +74,9 @@ class Input(GameObject):
                         x.direction = self.direction
                     self.selected_obj.direction = self.direction
 
+                if event.dict["key"] == 100:
+                    self.game.DEBUG = not self.game.DEBUG
+
                 if event.dict["key"] == 109:
                     self.mode += 1
 
@@ -100,6 +103,8 @@ class Input(GameObject):
                 if self.mode == 2:
                     if self.obj_start_pos is not None:
                         for x in self.obj_start_pos:
+                            if isinstance(x, Item):
+                                continue
                             x.move(x.grid_to_world(grid_position))
                         self.obj_start_pos = None
                     else:

@@ -37,48 +37,82 @@ class UI(GameObject):
 
     def __render_cursor(self, screen):
         mouse_pos = pygame.mouse.get_pos()
-        if (
-            self.game.input_object.mode == 1
-            and self.game.input_object.selected_obj is not None
-        ):
-            screen.blit(self.game.input_object.selected_obj.get_sprite(), mouse_pos)
-        elif self.game.input_object.mode == 3:
+        if self.game.input.mode == 1 and self.game.input.selected_obj is not None:
+            screen.blit(self.game.input.selected_obj.get_sprite(), mouse_pos)
+        elif self.game.input.mode == 3:
             screen.blit(self.x_sprite, mouse_pos)
 
     def __render_selector(self, screen):
-        if self.game.input_object.mode != 1:
+        if self.game.input.mode != 1:
             return
 
         width, height = pygame.display.get_window_size()
         y = height - 16 - self.game.SIZE_PER_TILE
 
         for x in range(width // self.game.SIZE_PER_TILE):
-            if x < len(self.game.input_object.selectors):
+            if x < len(self.game.input.selectors):
                 screen.blit(
                     self.game.FONTS["Arial"].render(
-                        str(self.game.input_object.selectors[x].cost), True, "White"
+                        str(self.game.input.selectors[x].cost), True, "White"
                     ),
                     (x * self.game.SIZE_PER_TILE + 3, y - 20),
                 )
                 screen.blit(
-                    self.game.input_object.selectors[x].get_sprite(),
+                    self.game.input.selectors[x].get_sprite(),
                     (x * self.game.SIZE_PER_TILE, y),
                 )
 
     def __render_mode(self, screen):
         mode = "Insert"
 
-        if self.game.input_object.mode == 2:
+        if self.game.input.mode == 2:
             mode = "Move"
-        elif self.game.input_object.mode == 3:
+        elif self.game.input.mode == 3:
             mode = "Remove"
 
         screen.blit(
             self.game.FONTS["Arial"].render(f"Mode: {mode}", True, "White"), (0, 10)
         )
 
+    def __render_debug(self, screen):
+        mouse_grid_pos = (
+            self.game.camera.to_world_position(pygame.mouse.get_pos())[0]
+            // self.game.SIZE_PER_TILE,
+            self.game.camera.to_world_position(pygame.mouse.get_pos())[1]
+            // self.game.SIZE_PER_TILE,
+        )
+
+        elements = [
+            self.game.FONTS["Arial"].render(f"Cash: {self.game.cash}", True, "White"),
+            self.game.FONTS["Arial"].render(
+                f"Mouse Pos: {pygame.mouse.get_pos()}", True, "White"
+            ),
+            self.game.FONTS["Arial"].render(
+                f"Pos: {self.game.camera.to_world_position(pygame.mouse.get_pos())}",
+                True,
+                "White",
+            ),
+            self.game.FONTS["Arial"].render(
+                f"Grid Pos: {mouse_grid_pos}",
+                True,
+                "White",
+            ),
+            self.game.FONTS["Arial"].render(
+                f"Obj count: {len(self.game.objects)}", True, "White"
+            )
+        ]
+
+        for x in range(len(elements)):
+            screen.blit(
+                elements[x],
+                (0, (x * 18) + 32),
+            )
+
     def render(self, screen):
         self.__render_grid(screen)
         self.__render_cursor(screen)
         self.__render_selector(screen)
         self.__render_mode(screen)
+
+        if self.game.DEBUG:
+            self.__render_debug(screen)
