@@ -1,0 +1,7 @@
+__pycache__/
+.conda/
+
+statistics.json
+save_debug.json
+save.json
+.DS_Store

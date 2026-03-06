@@ -1,0 +1,30 @@
+{
+  "unknown": {
+    "sprite": "assets/unknown.png",
+    "cost": 9999999999
+  },
+  "miner": {
+    "sprite": "assets/machines/miner.jpg",
+    "cost": 5,
+    "recipes": []
+  },
+  "seller": {
+    "sprite": "assets/machines/seller.jpg",
+    "cost": 5,
+    "recipes": []
+  },
+  "furnance": {
+    "sprite": "assets/machines/furnance.png",
+    "cost": 25,
+    "recipes": [
+      {
+        "input": [{ "item-id": "iron_ore", "amount": 2 }],
+        "output": [{ "item-id": "iron" }]
+      },
+      {
+        "input": [{ "item-id": "copper_ore", "amount": 2 }],
+        "output": [{ "item-id": "copper" }]
+      }
+    ]
+  }
+}
