@@ -17,6 +17,7 @@ import pygame
 
 if TYPE_CHECKING:
     from src.classes.game_object import GameObject
+    from pygame import FRect, Rect
 
 
 # Got this formatter from the internet
@@ -156,9 +157,13 @@ class Game(EventEmitter):
                         continue
                     x.render(self.surface)
 
-                rects = self.sprite_layers.draw(self.surface)
+                rects: list[FRect | Rect] = []
+                for x in self.sprite_layers.draw(self.surface):
+                    if x.width > 0 or x.height > 0:
+                        rects.append(x)
+
                 # This is here for quick debugging purpose, it's really noisy so i would like if it doesn't do that
-                if self.DEBUG and False:
+                if self.DEBUG:
                     if len(rects) > 0:
                         self.logger.debug("Got draw request for => %s", rects)
                     else:
