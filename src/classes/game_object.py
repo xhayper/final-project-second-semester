@@ -45,7 +45,7 @@ class GameObject(EventEmitter):
     ####
 
     def get_rotation_vector(self, direction: DIRECTION):
-       return ROTATION_DIRECTION_VECTOR[self.rotation][direction]
+        return ROTATION_DIRECTION_VECTOR[self.rotation][direction]
 
     def get_direction(self, direction: DIRECTION):
         x, y = ROTATION_DIRECTION_VECTOR[self.rotation][direction]

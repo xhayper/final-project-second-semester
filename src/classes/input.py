@@ -41,6 +41,7 @@ class Input(EventEmitter):
         self.game.camera.position = self.__cam_start_position - (
             pos - self.__mouse_start_position
         )
+        self.game.request_flip(False)
 
     def __on_mousedown(self, value: dict[str, Any]):
         self.__mouse_down = True
@@ -56,3 +57,12 @@ class Input(EventEmitter):
 
     def update(self, dt: float):
         pass
+
+    def destroy(self):
+        self.game.remove_listener(f"PYGAME_{pygame.MOUSEBUTTONUP}", self.__on_mouseup)
+        self.game.remove_listener(
+            f"PYGAME_{pygame.MOUSEBUTTONDOWN}", self.__on_mousedown
+        )
+        self.game.remove_listener(f"PYGAME_{pygame.MOUSEMOTION}", self.__on_mousemove)
+        self.game.remove_listener(f"PYGAME_{pygame.KEYUP}", self.__on_keyup)
+        self.game.remove_listener(f"PYGAME_{pygame.KEYDOWN}", self.__on_keydown)

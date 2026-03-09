@@ -8,7 +8,6 @@ Listener = Callable[..., Any]
 
 
 def is_same_listener(a: Any, b: Any) -> bool:
-    """Treat bound methods with the same instance+function as the same listener."""
     if a is b:
         return True
 
@@ -20,7 +19,6 @@ def is_same_listener(a: Any, b: Any) -> bool:
     a_self = getattr(a, "__self__", None)
     b_self = getattr(b, "__self__", None)
 
-    # Bound methods are recreated on attribute access, so object identity is unstable.
     return (
         a_func is not None
         and b_func is not None
