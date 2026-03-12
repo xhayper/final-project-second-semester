@@ -1,5 +1,7 @@
 __pycache__/
 .conda/
+.venv/
+saves/
 
 statistics.json
 save_debug.json

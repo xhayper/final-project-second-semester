@@ -1,0 +1,57 @@
+{
+  "unknown": {
+    "type": "unknown",
+    "sprite": "assets/unknown.png",
+    "cost": 9999999999,
+    "recipes": []
+  },
+  "miner": {
+    "type": "miner",
+    "sprite": "assets/sprite/machines/miner.jpg",
+    "cost": 5,
+    "recipes": []
+  },
+  "seller": {
+    "type": "seller",
+    "sprite": "assets/sprite/machines/seller.jpg",
+    "cost": 5,
+    "recipes": []
+  },
+  "furnance": {
+    "type": "furnance",
+    "sprite": "assets/sprite/machines/furnance.png",
+    "cost": 25,
+    "recipes": [
+      {
+        "duration": 1,
+        "inputs": [
+          {
+            "type": "iron_ore",
+            "amount": 2
+          }
+        ],
+        "outputs": [
+          {
+            "type": "iron",
+            "amount": 1
+          }
+        ]
+      },
+      {
+        "duration": 1,
+        "inputs": [
+          {
+            "type": "copper_ore",
+            "amount": 2
+          }
+        ],
+        "outputs": [
+          {
+            "type": "copper",
+            "amount": 1
+          }
+        ]
+      }
+    ]
+  }
+}

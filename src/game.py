@@ -1,18 +1,16 @@
 from __future__ import annotations
 
-from pygame import Clock, Surface, event, display, Rect
+from src.scenes import GameScene, LoadingScene, MainMenuScene, SceneManager
+from src.classes.event_emitter import LISTENER_LIST, EventEmitter
+from pygame import Clock, Rect, Surface, display, event
 from pygame.sprite import DirtySprite, LayeredDirty
-from src.classes.event_emitter import EventEmitter
-from src.static_config import GRID_SIZE
-from src.objects.sprite import Sprite
+from typing import TYPE_CHECKING, Any, Callable
 from src.classes.camera import Camera
-from typing import TYPE_CHECKING, Any
 from src.classes.input import Input
-from src.objects.belt import Belt
+from src.classes.data import Data
 from src.classes.ui import UI
 import logging
 import pygame
-
 
 if TYPE_CHECKING:
     from src.classes.game_object import GameObject
@@ -62,26 +60,127 @@ class Game(EventEmitter):
 
         self.surface = display.set_mode((1280, 720), pygame.RESIZABLE)
         self.surface.fill((0, 0, 0))
+
         self.sprite_layers: LayeredDirty[DirtySprite] = LayeredDirty(default_layer=1)
-        self.camera = Camera(self)
-        self.input = Input(self)
-        self.ui = UI(self)
-        self.objects: list[GameObject] = []
+        self.scene_manager = SceneManager(self)
+        self.scene_manager.add_scene(LoadingScene(self))
+        self.scene_manager.add_scene(MainMenuScene(self))
+        self.scene_manager.add_scene(GameScene(self))
+        self.scene_manager.change_scene("loading")
+        self.active_save_path = "saves/save_1.data"
+
+        self.data = Data(self)
+        self._camera: Camera | None = None
+        self._input: Input | None = None
+        self._ui: UI | None = None
         self.bg = Surface((1280, 720))
         self.bg.fill("black")
 
-        self.position_map: dict[tuple[int, int], list[GameObject]] = {}
-
         display.set_caption("Funky Factory Game")
 
-        # stuff
-        self.__requested_flip = False
+        self.__requested_flip = True
+
+    @property
+    def camera(self) -> Camera:
+        if self._camera is None:
+            raise RuntimeError("Camera is not initialized yet")
+        return self._camera
+
+    @property
+    def input(self) -> Input:
+        if self._input is None:
+            raise RuntimeError("Input is not initialized yet")
+        return self._input
+
+    @property
+    def ui(self) -> UI:
+        if self._ui is None:
+            raise RuntimeError("UI is not initialized yet")
+        return self._ui
+
+    @property
+    def runtime_systems_ready(self) -> bool:
+        return (
+            self._camera is not None
+            and self._input is not None
+            and self._ui is not None
+        )
+
+    def initialize_runtime_systems(self):
+        if (
+            self._camera is not None
+            and self._input is not None
+            and self._ui is not None
+        ):
+            return
+
+        self._camera = Camera(self)
+        self._input = Input(self)
+        self._ui = UI(self)
+        self.request_flip(rebuild_bg=True)
+
+    @property
+    def objects(self) -> list[GameObject]:
+        if self.scene_manager.current_scene is None:
+            return []
+        return self.scene_manager.current_scene.objects
+
+    @objects.setter
+    def objects(self, value: list[GameObject]):
+        if self.scene_manager.current_scene is None:
+            return
+        self.scene_manager.current_scene.objects = value
+
+    @property
+    def position_map(self) -> dict[tuple[int, int], list[GameObject]]:
+        if self.scene_manager.current_scene is None:
+            return {}
+        return self.scene_manager.current_scene.position_map
+
+    @position_map.setter
+    def position_map(self, value: dict[tuple[int, int], list[GameObject]]):
+        if self.scene_manager.current_scene is None:
+            return
+        self.scene_manager.current_scene.position_map = value
 
     def request_flip(self, rebuild_bg: bool = True):
         if rebuild_bg:
             self.bg = Surface(display.get_window_size())
             self.bg.fill("black")
         self.__requested_flip = True
+
+    def render_game_scene(
+        self, surface: Surface, overlay_draw: Callable[[Surface], None] | None = None
+    ):
+        if self._camera is None:
+            return
+
+        if self.__requested_flip:
+            self.surface.fill("black")
+        else:
+            self.sprite_layers.clear(self.surface, self.bg)
+
+        rects: list[FRect | Rect] = []
+        for x in self.sprite_layers.draw(self.surface):
+            if x.width > 0 or x.height > 0:
+                rects.append(x)
+
+        if self.DEBUG and False:
+            if self.__requested_flip:
+                self.logger.debug("FULL REDRAW!")
+            elif len(rects) > 0:
+                self.logger.debug("Got draw request for => %s", rects)
+            else:
+                self.logger.debug("No draw request")
+
+        if overlay_draw is not None:
+            overlay_draw(surface)
+
+        if self.__requested_flip:
+            display.flip()
+            self.__requested_flip = False
+        else:
+            display.update(rects)
 
     def start(self):
         try:
@@ -96,123 +195,42 @@ class Game(EventEmitter):
                     if evt.type == pygame.QUIT:
                         running = False
                         break
-                    else:
-                        self.emit(f"PYGAME_{evt.type}", evt.dict)
-
-                if self.__requested_flip:
-                    self.surface.fill("black")
-                else:
-                    self.sprite_layers.clear(self.surface, self.bg)
+                    self.scene_manager.handle_event(evt)
 
                 if not running:
                     break
 
-                updateables: list[Any] = [self.camera, self.input]
-                updateables.extend(self.objects)
+                self.scene_manager.update(dt)
+                self.scene_manager.render(self.surface)
 
-                # for x in updateables:
-                #     x.update(dt)
-                self.emit("update", dt)
-
-                for x in self.objects:
-                    if not x.visible:
-                        continue
-                    if isinstance(x, Sprite):
-                        continue
-                    x.render(self.surface)
-
-                rects: list[FRect | Rect] = []
-                for x in self.sprite_layers.draw(self.surface):
-                    if x.width > 0 or x.height > 0:
-                        rects.append(x)
-
-                if self.DEBUG:
-                    for x in self.objects:
-                        debug_rect = x.screen_rect.copy()
-                        rects.append(debug_rect.inflate(2, 2))
-                        pygame.draw.rect(
-                            self.surface,
-                            "GREEN" if x.visible else "RED",
-                            debug_rect,
-                            width=1,
-                        )
-
-                    drawn_links: set[tuple[int, int]] = set()
-                    for x in self.objects:
-                        if not isinstance(x, Belt):
-                            continue
-
-                        neighbors: list[Belt] = [x.next] if x.next else []
-                        neighbors.extend(x.prevs)
-
-                        for neighbor in neighbors:
-                            x_id = id(x)
-                            neighbor_id = id(neighbor)
-                            link_key = (
-                                (x_id, neighbor_id)
-                                if x_id <= neighbor_id
-                                else (neighbor_id, x_id)
-                            )
-                            if link_key in drawn_links:
-                                continue
-                            drawn_links.add(link_key)
-
-                            a = self.camera.world_to_screen(x.position)
-                            b = self.camera.world_to_screen(neighbor.position)
-
-                            a_line = (
-                                a.x + (GRID_SIZE / 2),
-                                a.y + (GRID_SIZE / 2),
-                            )
-                            b_line = (
-                                b.x + (GRID_SIZE / 2),
-                                b.y + (GRID_SIZE / 2),
-                            )
-
-                            min_x = int(min(a_line[0], b_line[0]))
-                            min_y = int(min(a_line[1], b_line[1]))
-                            width = max(1, int(abs(b_line[0] - a_line[0])))
-                            height = max(1, int(abs(b_line[1] - a_line[1])))
-                            rects.append(
-                                Rect(min_x, min_y, width, height).inflate(2, 2)
-                            )
-                            pygame.draw.line(
-                                self.surface,
-                                "GREEN",
-                                a_line,
-                                b_line,
-                                width=1,
-                            )
-
-                # This is here for quick debugging purpose, it's really noisy so i would like if it doesn't do that
-                if self.DEBUG and False:
-                    if self.__requested_flip:
-                        self.logger.debug("FULL REDRAW!")
-                    elif len(rects) > 0:
-                        self.logger.debug("Got draw request for => %s", rects)
-                    else:
-                        self.logger.debug("No draw request")
-                if self.__requested_flip:
+                if self.scene_manager.current_name != "game":
                     display.flip()
-                else:
-                    display.update(rects)
-
-                if self.__requested_flip:
-                    self.__requested_flip = False
 
                 dt = clock.tick(60) / 1000
         except KeyboardInterrupt:
             pass
 
+        self.emit("quit")
+
         self.logger.debug("Shutting down!")
 
         pygame.quit()
 
-        self.camera.destroy()
-        self.input.destroy()
-        self.ui.destroy()
+        for emitter in LISTENER_LIST:
+            emitter.remove_all_listeners()
 
-        for x in self.objects:
-            x.destroy()
+        if "game" in ["loading", "main_menu", "game"]:
+            game_scene = self.scene_manager.get_scene("game")
+            if len(game_scene.objects) > 0:
+                previous = self.scene_manager.current_scene
+                self.scene_manager.current_scene = game_scene
+                self.data.save(self.active_save_path)
+                self.scene_manager.current_scene = previous
 
-        self.objects = []
+        if self._camera is not None:
+            self._camera.destroy()
+        if self._input is not None:
+            self._input.destroy()
+        if self._ui is not None:
+            self._ui.destroy()
+        self.scene_manager.destroy()

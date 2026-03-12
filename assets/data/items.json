@@ -1,0 +1,27 @@
+{
+  "unknown": {
+    "type": "unknown",
+    "sprite": "assets/unknown.png",
+    "price": 0
+  },
+  "iron": {
+    "type": "iron",
+    "sprite": "assets/sprite/ores/iron.png",
+    "price": 5
+  },
+  "iron_ore": {
+    "type": "iron_ore",
+    "sprite": "assets/sprite/ores/iron_ore.png",
+    "price": 3
+  },
+  "copper": {
+    "type": "copper",
+    "sprite": "assets/sprite/ores/copper.jpg",
+    "price": 4
+  },
+  "copper_ore": {
+    "type": "copper_ore",
+    "sprite": "assets/sprite/ores/copper_ore.png",
+    "price": 2
+  }
+}

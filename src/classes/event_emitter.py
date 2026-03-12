@@ -3,8 +3,10 @@ from __future__ import annotations
 from collections import defaultdict
 from typing import Any, Callable
 
-
 Listener = Callable[..., Any]
+
+# Used for cleanup!
+LISTENER_LIST: list[EventEmitter] = []
 
 
 def is_same_listener(a: Any, b: Any) -> bool:
@@ -30,6 +32,11 @@ def is_same_listener(a: Any, b: Any) -> bool:
 class EventEmitter:
     def __init__(self) -> None:
         self.__events: dict[str, list[Listener]] = defaultdict(list)
+        LISTENER_LIST.append(self)
+
+    def __del__(self) -> None:
+        self.remove_all_listeners()
+        LISTENER_LIST.remove(self)
 
     def on(self, event: str, listener: Listener) -> EventEmitter:
         self.__events[event].append(listener)

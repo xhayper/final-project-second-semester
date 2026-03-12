@@ -1,14 +1,14 @@
 from __future__ import annotations
 
+
 from src.static_config import DIRECTION, GRID_SIZE
+from typing import TYPE_CHECKING, Any
 from src.objects.sprite import Sprite
-from typing import TYPE_CHECKING
 from pygame import Vector2, math
 
-
 if TYPE_CHECKING:
-    from src.objects.item import Item
     from src.game import Game
+    from src.objects.item import Item
 
 
 class Belt(Sprite):
@@ -31,6 +31,11 @@ class Belt(Sprite):
         self.__link_belt_list()
 
         self.game.on("update", self.update)
+
+    def __del__(self):
+        self.destroy()
+
+    ####
 
     @Sprite.rotation.setter
     def rotation(self, value: int):  # type: ignore
@@ -92,6 +97,8 @@ class Belt(Sprite):
                     continue
                 if obj is self:
                     continue
+                if obj.destroyed:
+                    continue
 
                 obj_forward = obj.get_grid_forward()
                 if (int(obj_forward.x), int(obj_forward.y)) != current:
@@ -117,8 +124,25 @@ class Belt(Sprite):
             self.next = None
 
     def destroy(self):
+        self.game.remove_listener("update", self.update)
         self.__unlink_belt_list()
         super().destroy()
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "class": "belt",
+            "position": [int(self.position.x), int(self.position.y)],
+            "rotation": int(self.rotation),
+        }
+
+    @classmethod
+    def from_dict(cls, game: Game, data: dict[str, Any]):
+        pos = data.get("position", [0, 0])
+        return cls(
+            game,
+            position=Vector2(pos[0], pos[1]),
+            rotation=int(data.get("rotation", 0)),
+        )
 
     ##
 
@@ -143,7 +167,7 @@ class Belt(Sprite):
             return
 
         for x in self.game.position_map[grid_pos]:
-            if isinstance(x, Item):
+            if isinstance(x, Item) and not x.destroyed:
                 self.insert_item(x)
 
     def insert_item(self, item: Item, initial_progress: float = 0):
@@ -166,6 +190,10 @@ class Belt(Sprite):
         rotation_vector = self.get_rotation_vector(DIRECTION.FORWARD)
 
         for item in list(self.item_progess):
+            if item.destroyed:
+                self.remove_item(item)
+                continue
+
             self.item_progess[item] += dt * self.speed
 
             progress = min(self.item_progess[item], 1)
@@ -188,4 +216,6 @@ class Belt(Sprite):
                 if self.next:
                     self.next.insert_item(item, initial_progress=overflow)
                 else:
-                    item.search_for_belt()
+                    item.search_for_machine()
+                    if not item.destroyed:
+                        item.search_for_belt()
