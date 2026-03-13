@@ -8,7 +8,6 @@ import pygame
 
 if TYPE_CHECKING:
     from pygame.typing import RectLike
-
     from src.game import Game
 
 

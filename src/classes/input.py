@@ -175,6 +175,9 @@ class Input(EventEmitter):
         self.game.camera.adjust_zoom(delta, Vector2(pygame.mouse.get_pos()))
 
     def __on_mousedown(self, value: dict[str, Any]):
+        if value["button"] != 1:
+            return
+
         # Key: Left click
         pos = Vector2(value["pos"][0], value["pos"][1])
         grid_position = self._grid_position_from_screen(pos)

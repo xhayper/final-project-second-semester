@@ -153,11 +153,18 @@ def _render_window(payload: dict[str, Any]):
         _as_event_list(payload.get("cash_events", [])), minimum=100
     )
 
-    x = list(range(len(spawn_series)))
-    ax_count_line.plot(x, spawn_series, label="spawn", color="#4caf50")
-    ax_count_line.plot(x, despawn_series, label="despawn", color="#f44336")
-    ax_count_line.plot(x, process_series, label="process", color="#2196f3")
-    ax_count_line.set_title("Event Trends (100+ points)")
+    ax_count_line.plot(
+        range(len(spawn_series)), spawn_series, label="spawn", color="#4caf50"
+    )
+
+    ax_count_line.plot(
+        range(len(despawn_series)), despawn_series, label="despawn", color="#f44336"
+    )
+
+    ax_count_line.plot(
+        range(len(process_series)), process_series, label="process", color="#2196f3"
+    )
+    ax_count_line.set_title("Event Trends")
     ax_count_line.legend(loc="upper left", fontsize=8)
 
     ax_cash_line.plot(
