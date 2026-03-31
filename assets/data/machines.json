@@ -5,192 +5,894 @@
     "cost": 0,
     "recipes": []
   },
-
   "miner": {
     "type": "miner",
     "sprite": "assets/sprite/machines/miner.png",
     "cost": 10,
-    "recipes": [] 
+    "recipes": []
   },
-
   "ore_refinery": {
     "type": "ore_refinery",
     "sprite": "assets/sprite/machines/refinery.png",
-    "cost": 100,
+    "cost": 80,
     "recipes": [
-      { "duration": 1.5, "inputs": [{ "type": "copper_ore", "amount": 2 }], "outputs": [{ "type": "stone", "amount": 1 }] },
-      { "duration": 2, "inputs": [{ "type": "copper_ore", "amount": 3 }], "outputs": [{ "type": "iron_ore", "amount": 1 }] },
-      { "duration": 3, "inputs": [{ "type": "iron_ore", "amount": 2 }], "outputs": [{ "type": "coal", "amount": 1 }] },
-      { "duration": 3, "inputs": [{ "type": "coal", "amount": 2 }], "outputs": [{ "type": "silicon_ore", "amount": 1 }] },
-      { "duration": 4, "inputs": [{ "type": "coal", "amount": 3 }], "outputs": [{ "type": "gold_ore", "amount": 1 }] },
-      { "duration": 6, "inputs": [{ "type": "gold_ore", "amount": 4 }], "outputs": [{ "type": "uranium_ore", "amount": 1 }] }
+      {
+        "duration": 1,
+        "inputs": [
+          {
+            "type": "copper_ore",
+            "amount": 2
+          }
+        ],
+        "outputs": [
+          {
+            "type": "stone",
+            "amount": 1
+          }
+        ]
+      },
+      {
+        "duration": 2,
+        "inputs": [
+          {
+            "type": "copper_ore",
+            "amount": 3
+          }
+        ],
+        "outputs": [
+          {
+            "type": "iron_ore",
+            "amount": 1
+          }
+        ]
+      },
+      {
+        "duration": 2.5,
+        "inputs": [
+          {
+            "type": "iron_ore",
+            "amount": 2
+          }
+        ],
+        "outputs": [
+          {
+            "type": "coal",
+            "amount": 1
+          }
+        ]
+      },
+      {
+        "duration": 3,
+        "inputs": [
+          {
+            "type": "coal",
+            "amount": 2
+          }
+        ],
+        "outputs": [
+          {
+            "type": "silicon_ore",
+            "amount": 1
+          }
+        ]
+      },
+      {
+        "duration": 4,
+        "inputs": [
+          {
+            "type": "coal",
+            "amount": 3
+          }
+        ],
+        "outputs": [
+          {
+            "type": "gold_ore",
+            "amount": 1
+          }
+        ]
+      },
+      {
+        "duration": 6,
+        "inputs": [
+          {
+            "type": "gold_ore",
+            "amount": 3
+          }
+        ],
+        "outputs": [
+          {
+            "type": "uranium_ore",
+            "amount": 1
+          }
+        ]
+      }
     ]
   },
-
   "ore_enricher": {
     "type": "ore_enricher",
     "sprite": "assets/sprite/machines/enricher.png",
     "cost": 500,
     "recipes": [
-      { "duration": 2, "inputs": [{ "type": "copper_ore", "amount": 2 }], "outputs": [{ "type": "enriched_copper_ore", "amount": 1 }] },
-      { "duration": 3, "inputs": [{ "type": "iron_ore", "amount": 2 }], "outputs": [{ "type": "enriched_iron_ore", "amount": 1 }] },
-      { "duration": 4, "inputs": [{ "type": "gold_ore", "amount": 2 }], "outputs": [{ "type": "enriched_gold_ore", "amount": 1 }] }
+      {
+        "duration": 2,
+        "inputs": [
+          {
+            "type": "copper_ore",
+            "amount": 2
+          }
+        ],
+        "outputs": [
+          {
+            "type": "enriched_copper_ore",
+            "amount": 1
+          }
+        ]
+      },
+      {
+        "duration": 3,
+        "inputs": [
+          {
+            "type": "iron_ore",
+            "amount": 2
+          }
+        ],
+        "outputs": [
+          {
+            "type": "enriched_iron_ore",
+            "amount": 1
+          }
+        ]
+      },
+      {
+        "duration": 4,
+        "inputs": [
+          {
+            "type": "gold_ore",
+            "amount": 2
+          }
+        ],
+        "outputs": [
+          {
+            "type": "enriched_gold_ore",
+            "amount": 1
+          }
+        ]
+      }
     ]
   },
-
   "centrifuge": {
     "type": "centrifuge",
     "sprite": "assets/sprite/machines/centrifuge.png",
-    "cost": 15000,
+    "cost": 18000,
     "recipes": [
-      { "duration": 10, "inputs": [{ "type": "uranium_ore", "amount": 5 }], "outputs": [{ "type": "enriched_uranium", "amount": 1 }] }
+      {
+        "duration": 10,
+        "inputs": [
+          {
+            "type": "uranium_ore",
+            "amount": 4
+          }
+        ],
+        "outputs": [
+          {
+            "type": "enriched_uranium",
+            "amount": 1
+          }
+        ]
+      }
     ]
   },
-
   "furnace": {
     "type": "furnace",
     "sprite": "assets/sprite/machines/furnace.png",
     "cost": 50,
     "recipes": [
-      { "duration": 1, "inputs": [{ "type": "copper_ore", "amount": 2 }], "outputs": [{ "type": "copper", "amount": 1 }] },
-      { "duration": 1.5, "inputs": [{ "type": "iron_ore", "amount": 2 }], "outputs": [{ "type": "iron", "amount": 1 }] },
-      { "duration": 1, "inputs": [{ "type": "stone", "amount": 2 }], "outputs": [{ "type": "glass", "amount": 1 }] },
-      { "duration": 2, "inputs": [{ "type": "silicon_ore", "amount": 1 }], "outputs": [{ "type": "silicon", "amount": 1 }] },
-      { "duration": 2.5, "inputs": [{ "type": "gold_ore", "amount": 2 }], "outputs": [{ "type": "gold", "amount": 1 }] },
-      
-      { "duration": 1.5, "inputs": [{ "type": "enriched_copper_ore", "amount": 1 }], "outputs": [{ "type": "copper", "amount": 2 }] },
-      { "duration": 2, "inputs": [{ "type": "enriched_iron_ore", "amount": 1 }], "outputs": [{ "type": "iron", "amount": 2 }] },
-      { "duration": 3, "inputs": [{ "type": "enriched_gold_ore", "amount": 1 }], "outputs": [{ "type": "gold", "amount": 2 }] },
-
-      { "duration": 3, "inputs": [{ "type": "iron", "amount": 2 }, { "type": "coal", "amount": 1 }], "outputs": [{ "type": "steel", "amount": 1 }] }
+      {
+        "duration": 1,
+        "inputs": [
+          {
+            "type": "copper_ore",
+            "amount": 2
+          }
+        ],
+        "outputs": [
+          {
+            "type": "copper",
+            "amount": 1
+          }
+        ]
+      },
+      {
+        "duration": 1,
+        "inputs": [
+          {
+            "type": "stone",
+            "amount": 2
+          }
+        ],
+        "outputs": [
+          {
+            "type": "glass",
+            "amount": 1
+          }
+        ]
+      },
+      {
+        "duration": 1.5,
+        "inputs": [
+          {
+            "type": "iron_ore",
+            "amount": 2
+          }
+        ],
+        "outputs": [
+          {
+            "type": "iron",
+            "amount": 1
+          }
+        ]
+      },
+      {
+        "duration": 2,
+        "inputs": [
+          {
+            "type": "silicon_ore",
+            "amount": 1
+          }
+        ],
+        "outputs": [
+          {
+            "type": "silicon",
+            "amount": 1
+          }
+        ]
+      },
+      {
+        "duration": 2.5,
+        "inputs": [
+          {
+            "type": "gold_ore",
+            "amount": 2
+          }
+        ],
+        "outputs": [
+          {
+            "type": "gold",
+            "amount": 1
+          }
+        ]
+      },
+      {
+        "duration": 1.5,
+        "inputs": [
+          {
+            "type": "enriched_copper_ore",
+            "amount": 1
+          }
+        ],
+        "outputs": [
+          {
+            "type": "copper",
+            "amount": 2
+          }
+        ]
+      },
+      {
+        "duration": 2,
+        "inputs": [
+          {
+            "type": "enriched_iron_ore",
+            "amount": 1
+          }
+        ],
+        "outputs": [
+          {
+            "type": "iron",
+            "amount": 2
+          }
+        ]
+      },
+      {
+        "duration": 3,
+        "inputs": [
+          {
+            "type": "enriched_gold_ore",
+            "amount": 1
+          }
+        ],
+        "outputs": [
+          {
+            "type": "gold",
+            "amount": 2
+          }
+        ]
+      },
+      {
+        "duration": 3,
+        "inputs": [
+          {
+            "type": "iron",
+            "amount": 2
+          },
+          {
+            "type": "coal",
+            "amount": 1
+          }
+        ],
+        "outputs": [
+          {
+            "type": "steel",
+            "amount": 1
+          }
+        ]
+      }
     ]
   },
-
   "press": {
     "type": "press",
     "sprite": "assets/sprite/machines/press.png",
-    "cost": 150,
+    "cost": 120,
     "recipes": [
-      { "duration": 1, "inputs": [{ "type": "iron", "amount": 1 }], "outputs": [{ "type": "iron_plate", "amount": 1 }] },
-      { "duration": 1, "inputs": [{ "type": "copper", "amount": 1 }], "outputs": [{ "type": "copper_plate", "amount": 1 }] }
+      {
+        "duration": 1,
+        "inputs": [
+          {
+            "type": "copper",
+            "amount": 1
+          }
+        ],
+        "outputs": [
+          {
+            "type": "copper_plate",
+            "amount": 1
+          }
+        ]
+      },
+      {
+        "duration": 1,
+        "inputs": [
+          {
+            "type": "iron",
+            "amount": 1
+          }
+        ],
+        "outputs": [
+          {
+            "type": "iron_plate",
+            "amount": 1
+          }
+        ]
+      }
     ]
   },
-
-  "pipe_extruder": {
-    "type": "pipe_extruder",
-    "sprite": "assets/sprite/machines/extruder.png",
-    "cost": 250,
-    "recipes": [
-      { "duration": 2, "inputs": [{ "type": "steel", "amount": 1 }], "outputs": [{ "type": "pipe", "amount": 2 }] }
-    ]
-  },
-
   "wire_mill": {
     "type": "wire_mill",
     "sprite": "assets/sprite/machines/wire_mill.png",
-    "cost": 200,
+    "cost": 180,
     "recipes": [
-      { "duration": 1, "inputs": [{ "type": "copper", "amount": 1 }], "outputs": [{ "type": "wire", "amount": 2 }] },
-      { "duration": 1.5, "inputs": [{ "type": "wire", "amount": 2 }], "outputs": [{ "type": "copper_coil", "amount": 1 }] },
-      { "duration": 2, "inputs": [{ "type": "gold", "amount": 1 }], "outputs": [{ "type": "gold_wire", "amount": 2 }] }
+      {
+        "duration": 1.5,
+        "inputs": [
+          {
+            "type": "copper",
+            "amount": 1
+          }
+        ],
+        "outputs": [
+          {
+            "type": "wire",
+            "amount": 2
+          }
+        ]
+      },
+      {
+        "duration": 2,
+        "inputs": [
+          {
+            "type": "wire",
+            "amount": 3
+          }
+        ],
+        "outputs": [
+          {
+            "type": "copper_coil",
+            "amount": 1
+          }
+        ]
+      },
+      {
+        "duration": 2,
+        "inputs": [
+          {
+            "type": "gold",
+            "amount": 1
+          }
+        ],
+        "outputs": [
+          {
+            "type": "gold_wire",
+            "amount": 2
+          }
+        ]
+      }
     ]
   },
-
+  "pipe_extruder": {
+    "type": "pipe_extruder",
+    "sprite": "assets/sprite/machines/extruder.png",
+    "cost": 300,
+    "recipes": [
+      {
+        "duration": 2,
+        "inputs": [
+          {
+            "type": "steel",
+            "amount": 1
+          }
+        ],
+        "outputs": [
+          {
+            "type": "pipe",
+            "amount": 2
+          }
+        ]
+      }
+    ]
+  },
   "gear_maker": {
     "type": "gear_maker",
     "sprite": "assets/sprite/machines/gear_maker.png",
-    "cost": 300,
+    "cost": 250,
     "recipes": [
-      { "duration": 1, "inputs": [{ "type": "iron_plate", "amount": 2 }], "outputs": [{ "type": "gear", "amount": 1 }] },
-      { "duration": 1, "inputs": [{ "type": "iron", "amount": 1 }], "outputs": [{ "type": "screw", "amount": 4 }] }
+      {
+        "duration": 1.5,
+        "inputs": [
+          {
+            "type": "iron_plate",
+            "amount": 2
+          }
+        ],
+        "outputs": [
+          {
+            "type": "gear",
+            "amount": 1
+          }
+        ]
+      },
+      {
+        "duration": 1,
+        "inputs": [
+          {
+            "type": "iron",
+            "amount": 1
+          }
+        ],
+        "outputs": [
+          {
+            "type": "screw",
+            "amount": 3
+          }
+        ]
+      }
     ]
   },
-
   "chemical_plant": {
     "type": "chemical_plant",
     "sprite": "assets/sprite/machines/chemical_plant.png",
-    "cost": 1200,
+    "cost": 1000,
     "recipes": [
-      { "duration": 3, "inputs": [{ "type": "coal", "amount": 2 }, { "type": "copper", "amount": 1 }], "outputs": [{ "type": "plastic", "amount": 2 }] },
-      { "duration": 3, "inputs": [{ "type": "coal", "amount": 1 }, { "type": "stone", "amount": 2 }], "outputs": [{ "type": "rubber", "amount": 2 }] }
+      {
+        "duration": 3,
+        "inputs": [
+          {
+            "type": "coal",
+            "amount": 2
+          },
+          {
+            "type": "copper",
+            "amount": 1
+          }
+        ],
+        "outputs": [
+          {
+            "type": "plastic",
+            "amount": 2
+          }
+        ]
+      },
+      {
+        "duration": 3,
+        "inputs": [
+          {
+            "type": "coal",
+            "amount": 2
+          },
+          {
+            "type": "stone",
+            "amount": 2
+          }
+        ],
+        "outputs": [
+          {
+            "type": "rubber",
+            "amount": 2
+          }
+        ]
+      }
     ]
   },
-
   "assembler": {
     "type": "assembler",
     "sprite": "assets/sprite/machines/assembler.png",
-    "cost": 800,
+    "cost": 700,
     "recipes": [
-      { "duration": 2, "inputs": [{ "type": "wire", "amount": 3 }, { "type": "iron_plate", "amount": 1 }], "outputs": [{ "type": "circuit", "amount": 1 }] },
-      { "duration": 2, "inputs": [{ "type": "iron", "amount": 1 }, { "type": "copper_coil", "amount": 1 }], "outputs": [{ "type": "rotor", "amount": 1 }] },
-      { "duration": 2, "inputs": [{ "type": "plastic", "amount": 2 }, { "type": "iron_plate", "amount": 1 }], "outputs": [{ "type": "casing", "amount": 1 }] },
-      { "duration": 2, "inputs": [{ "type": "copper_plate", "amount": 2 }, { "type": "pipe", "amount": 1 }], "outputs": [{ "type": "heat_sink", "amount": 1 }] },
-      { "duration": 3, "inputs": [{ "type": "steel", "amount": 4 }, { "type": "iron_plate", "amount": 2 }, { "type": "plastic", "amount": 2 }], "outputs": [{ "type": "frame", "amount": 1 }] },
-      { "duration": 4, "inputs": [{ "type": "steel", "amount": 2 }, { "type": "gear", "amount": 2 }, { "type": "pipe", "amount": 2 }, { "type": "screw", "amount": 8 }], "outputs": [{ "type": "engine", "amount": 1 }] }
+      {
+        "duration": 2,
+        "inputs": [
+          {
+            "type": "wire",
+            "amount": 3
+          },
+          {
+            "type": "iron_plate",
+            "amount": 1
+          }
+        ],
+        "outputs": [
+          {
+            "type": "circuit",
+            "amount": 1
+          }
+        ]
+      },
+      {
+        "duration": 2,
+        "inputs": [
+          {
+            "type": "iron",
+            "amount": 1
+          },
+          {
+            "type": "copper_coil",
+            "amount": 1
+          }
+        ],
+        "outputs": [
+          {
+            "type": "rotor",
+            "amount": 1
+          }
+        ]
+      },
+      {
+        "duration": 2,
+        "inputs": [
+          {
+            "type": "plastic",
+            "amount": 2
+          },
+          {
+            "type": "iron_plate",
+            "amount": 1
+          }
+        ],
+        "outputs": [
+          {
+            "type": "casing",
+            "amount": 1
+          }
+        ]
+      },
+      {
+        "duration": 2,
+        "inputs": [
+          {
+            "type": "copper_plate",
+            "amount": 2
+          },
+          {
+            "type": "pipe",
+            "amount": 1
+          }
+        ],
+        "outputs": [
+          {
+            "type": "heat_sink",
+            "amount": 1
+          }
+        ]
+      },
+      {
+        "duration": 3,
+        "inputs": [
+          {
+            "type": "steel",
+            "amount": 3
+          },
+          {
+            "type": "iron_plate",
+            "amount": 2
+          },
+          {
+            "type": "plastic",
+            "amount": 2
+          }
+        ],
+        "outputs": [
+          {
+            "type": "frame",
+            "amount": 1
+          }
+        ]
+      },
+      {
+        "duration": 4,
+        "inputs": [
+          {
+            "type": "steel",
+            "amount": 2
+          },
+          {
+            "type": "gear",
+            "amount": 2
+          },
+          {
+            "type": "pipe",
+            "amount": 2
+          },
+          {
+            "type": "screw",
+            "amount": 6
+          }
+        ],
+        "outputs": [
+          {
+            "type": "engine",
+            "amount": 1
+          }
+        ]
+      }
     ]
   },
-
   "chip_fab": {
     "type": "chip_fab",
     "sprite": "assets/sprite/machines/chip_fab.png",
-    "cost": 4000,
+    "cost": 4500,
     "recipes": [
-      { "duration": 4, "inputs": [{ "type": "silicon", "amount": 2 }, { "type": "gold_wire", "amount": 3 }], "outputs": [{ "type": "microchip", "amount": 1 }] }
+      {
+        "duration": 4,
+        "inputs": [
+          {
+            "type": "silicon",
+            "amount": 2
+          },
+          {
+            "type": "gold_wire",
+            "amount": 3
+          }
+        ],
+        "outputs": [
+          {
+            "type": "microchip",
+            "amount": 1
+          }
+        ]
+      }
     ]
   },
-
   "advanced_assembler": {
     "type": "advanced_assembler",
     "sprite": "assets/sprite/machines/advanced_assembler.png",
     "cost": 3500,
     "recipes": [
-      { "duration": 3, "inputs": [{ "type": "glass", "amount": 2 }, { "type": "silicon", "amount": 1 }, { "type": "wire", "amount": 2 }], "outputs": [{ "type": "display_panel", "amount": 1 }] },
-      { "duration": 3, "inputs": [{ "type": "gold_wire", "amount": 2 }, { "type": "silicon", "amount": 1 }, { "type": "casing", "amount": 1 }], "outputs": [{ "type": "sensor", "amount": 1 }] },
-      { "duration": 4, "inputs": [{ "type": "circuit", "amount": 2 }, { "type": "gold_wire", "amount": 3 }, { "type": "plastic", "amount": 1 }], "outputs": [{ "type": "advanced_circuit", "amount": 1 }] },
-      { "duration": 5, "inputs": [{ "type": "frame", "amount": 1 }, { "type": "rotor", "amount": 2 }, { "type": "advanced_circuit", "amount": 1 }, { "type": "sensor", "amount": 1 }], "outputs": [{ "type": "robotic_arm", "amount": 1 }] },
-      { "duration": 6, "inputs": [{ "type": "robotic_arm", "amount": 1 }, { "type": "engine", "amount": 1 }, { "type": "casing", "amount": 2 }], "outputs": [{ "type": "machine_part", "amount": 1 }] },
-      { "duration": 6, "inputs": [{ "type": "enriched_uranium", "amount": 1 }, { "type": "heat_sink", "amount": 2 }, { "type": "pipe", "amount": 4 }], "outputs": [{ "type": "nuclear_cell", "amount": 1 }] }
+      {
+        "duration": 3,
+        "inputs": [
+          {
+            "type": "glass",
+            "amount": 2
+          },
+          {
+            "type": "silicon",
+            "amount": 1
+          },
+          {
+            "type": "wire",
+            "amount": 2
+          }
+        ],
+        "outputs": [
+          {
+            "type": "display_panel",
+            "amount": 1
+          }
+        ]
+      },
+      {
+        "duration": 3,
+        "inputs": [
+          {
+            "type": "gold_wire",
+            "amount": 2
+          },
+          {
+            "type": "silicon",
+            "amount": 1
+          },
+          {
+            "type": "rubber",
+            "amount": 1
+          }
+        ],
+        "outputs": [
+          {
+            "type": "sensor",
+            "amount": 1
+          }
+        ]
+      },
+      {
+        "duration": 4,
+        "inputs": [
+          {
+            "type": "circuit",
+            "amount": 2
+          },
+          {
+            "type": "gold_wire",
+            "amount": 2
+          },
+          {
+            "type": "plastic",
+            "amount": 1
+          }
+        ],
+        "outputs": [
+          {
+            "type": "advanced_circuit",
+            "amount": 1
+          }
+        ]
+      },
+      {
+        "duration": 5,
+        "inputs": [
+          {
+            "type": "frame",
+            "amount": 1
+          },
+          {
+            "type": "rotor",
+            "amount": 2
+          },
+          {
+            "type": "advanced_circuit",
+            "amount": 1
+          },
+          {
+            "type": "sensor",
+            "amount": 1
+          }
+        ],
+        "outputs": [
+          {
+            "type": "robotic_arm",
+            "amount": 1
+          }
+        ]
+      },
+      {
+        "duration": 6,
+        "inputs": [
+          {
+            "type": "robotic_arm",
+            "amount": 1
+          },
+          {
+            "type": "engine",
+            "amount": 1
+          },
+          {
+            "type": "casing",
+            "amount": 2
+          }
+        ],
+        "outputs": [
+          {
+            "type": "machine_part",
+            "amount": 1
+          }
+        ]
+      },
+      {
+        "duration": 6,
+        "inputs": [
+          {
+            "type": "enriched_uranium",
+            "amount": 1
+          },
+          {
+            "type": "heat_sink",
+            "amount": 2
+          },
+          {
+            "type": "pipe",
+            "amount": 3
+          }
+        ],
+        "outputs": [
+          {
+            "type": "nuclear_cell",
+            "amount": 1
+          }
+        ]
+      }
     ]
   },
-
   "high_tech_assembler": {
     "type": "high_tech_assembler",
     "sprite": "assets/sprite/machines/high_tech.png",
-    "cost": 12000,
+    "cost": 14000,
     "recipes": [
       {
         "duration": 8,
         "inputs": [
-          { "type": "machine_part", "amount": 2 },
-          { "type": "display_panel", "amount": 4 },
-          { "type": "enriched_gold_ore", "amount": 2 }
+          {
+            "type": "machine_part",
+            "amount": 2
+          },
+          {
+            "type": "display_panel",
+            "amount": 4
+          },
+          {
+            "type": "enriched_gold_ore",
+            "amount": 2
+          }
         ],
-        "outputs": [{ "type": "high_tech", "amount": 1 }]
+        "outputs": [
+          {
+            "type": "high_tech",
+            "amount": 1
+          }
+        ]
       }
     ]
   },
-
   "quantum_fabricator": {
     "type": "quantum_fabricator",
     "sprite": "assets/sprite/machines/quantum.png",
-    "cost": 75000,
+    "cost": 80000,
     "recipes": [
       {
         "duration": 20,
         "inputs": [
-          { "type": "high_tech", "amount": 2 },
-          { "type": "microchip", "amount": 4 },
-          { "type": "nuclear_cell", "amount": 2 }
+          {
+            "type": "high_tech",
+            "amount": 2
+          },
+          {
+            "type": "microchip",
+            "amount": 4
+          },
+          {
+            "type": "nuclear_cell",
+            "amount": 2
+          }
         ],
-        "outputs": [{ "type": "quantum_computer", "amount": 1 }]
+        "outputs": [
+          {
+            "type": "quantum_computer",
+            "amount": 1
+          }
+        ]
       }
     ]
   },
-
   "seller": {
     "type": "seller",
     "sprite": "assets/sprite/machines/seller.png",
     "cost": 10,
-    "recipes": [] 
+    "recipes": []
   }
 }

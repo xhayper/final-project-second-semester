@@ -1,54 +1,217 @@
 {
-  "unknown": { "type": "unknown", "sprite": "assets/sprite/unknown.png", "price": 0 },
-
-  "copper_ore": { "type": "copper_ore", "sprite": "assets/sprite/ores/copper_ore.png", "price": 2 },
-  "stone": { "type": "stone", "sprite": "assets/sprite/ores/stone.png", "price": 2 },
-  "iron_ore": { "type": "iron_ore", "sprite": "assets/sprite/ores/iron_ore.png", "price": 5 },
-  "coal": { "type": "coal", "sprite": "assets/sprite/ores/coal.png", "price": 12 },
-  "silicon_ore": { "type": "silicon_ore", "sprite": "assets/sprite/ores/silicon_ore.png", "price": 28 },
-  "gold_ore": { "type": "gold_ore", "sprite": "assets/sprite/ores/gold_ore.png", "price": 42 },
-  "uranium_ore": { "type": "uranium_ore", "sprite": "assets/sprite/ores/uranium_ore.png", "price": 180 },
-
-  "enriched_copper_ore": { "type": "enriched_copper_ore", "sprite": "assets/sprite/items/enriched_copper_ore.png", "price": 8 },
-  "enriched_iron_ore": { "type": "enriched_iron_ore", "sprite": "assets/sprite/items/enriched_iron_ore.png", "price": 18 },
-  "enriched_gold_ore": { "type": "enriched_gold_ore", "sprite": "assets/sprite/items/enriched_gold_ore.png", "price": 110 },
-  "enriched_uranium": { "type": "enriched_uranium", "sprite": "assets/sprite/items/enriched_uranium.png", "price": 1400 },
-
-  "copper": { "type": "copper", "sprite": "assets/sprite/items/copper.png", "price": 8 },
-  "glass": { "type": "glass", "sprite": "assets/sprite/items/glass.png", "price": 8 },
-  "iron": { "type": "iron", "sprite": "assets/sprite/items/iron.png", "price": 18 },
-  "steel": { "type": "steel", "sprite": "assets/sprite/items/steel.png", "price": 65 },
-  "silicon": { "type": "silicon", "sprite": "assets/sprite/items/silicon.png", "price": 42 },
-  "gold": { "type": "gold", "sprite": "assets/sprite/items/gold.png", "price": 110 },
-
-  "plastic": { "type": "plastic", "sprite": "assets/sprite/items/plastic.png", "price": 35 },
-  "rubber": { "type": "rubber", "sprite": "assets/sprite/items/rubber.png", "price": 35 },
-
-  "copper_plate": { "type": "copper_plate", "sprite": "assets/sprite/items/copper_plate.png", "price": 14 },
-  "iron_plate": { "type": "iron_plate", "sprite": "assets/sprite/items/iron_plate.png", "price": 28 },
-  "wire": { "type": "wire", "sprite": "assets/sprite/items/wire.png", "price": 12 },
-  "copper_coil": { "type": "copper_coil", "sprite": "assets/sprite/items/copper_coil.png", "price": 35 },
-  "gold_wire": { "type": "gold_wire", "sprite": "assets/sprite/items/gold_wire.png", "price": 85 },
-  "screw": { "type": "screw", "sprite": "assets/sprite/items/screw.png", "price": 10 },
-  "gear": { "type": "gear", "sprite": "assets/sprite/items/gear.png", "price": 70 },
-  "pipe": { "type": "pipe", "sprite": "assets/sprite/items/pipe.png", "price": 60 },
-  "heat_sink": { "type": "heat_sink", "sprite": "assets/sprite/items/heat_sink.png", "price": 120 },
-
-  "casing": { "type": "casing", "sprite": "assets/sprite/items/casing.png", "price": 130 },
-  "rotor": { "type": "rotor", "sprite": "assets/sprite/items/rotor.png", "price": 70 },
-  "sensor": { "type": "sensor", "sprite": "assets/sprite/items/sensor.png", "price": 450 },
-  "display_panel": { "type": "display_panel", "sprite": "assets/sprite/items/display_panel.png", "price": 100 },
-
-  "circuit": { "type": "circuit", "sprite": "assets/sprite/items/circuit.png", "price": 90 },
-  "advanced_circuit": { "type": "advanced_circuit", "sprite": "assets/sprite/items/advanced_circuit.png", "price": 600 },
-  "microchip": { "type": "microchip", "sprite": "assets/sprite/items/microchip.png", "price": 450 },
-
-  "frame": { "type": "frame", "sprite": "assets/sprite/items/frame.png", "price": 520 },
-  "engine": { "type": "engine", "sprite": "assets/sprite/items/engine.png", "price": 620 },
-  "robotic_arm": { "type": "robotic_arm", "sprite": "assets/sprite/items/robotic_arm.png", "price": 2200 },
-  "machine_part": { "type": "machine_part", "sprite": "assets/sprite/items/machine_part.png", "price": 4000 },
-  "nuclear_cell": { "type": "nuclear_cell", "sprite": "assets/sprite/items/nuclear_cell.png", "price": 2500 },
-
-  "high_tech": { "type": "high_tech", "sprite": "assets/sprite/items/high_tech.png", "price": 12000 },
-  "quantum_computer": { "type": "quantum_computer", "sprite": "assets/sprite/items/quantum_computer.png", "price": 45000 }
+  "unknown": {
+    "type": "unknown",
+    "sprite": "assets/sprite/unknown.png",
+    "price": 0
+  },
+  "copper_ore": {
+    "type": "copper_ore",
+    "sprite": "assets/sprite/ores/copper_ore.png",
+    "price": 2
+  },
+  "stone": {
+    "type": "stone",
+    "sprite": "assets/sprite/ores/stone.png",
+    "price": 5
+  },
+  "iron_ore": {
+    "type": "iron_ore",
+    "sprite": "assets/sprite/ores/iron_ore.png",
+    "price": 6
+  },
+  "coal": {
+    "type": "coal",
+    "sprite": "assets/sprite/ores/coal.png",
+    "price": 15
+  },
+  "silicon_ore": {
+    "type": "silicon_ore",
+    "sprite": "assets/sprite/ores/silicon_ore.png",
+    "price": 35
+  },
+  "gold_ore": {
+    "type": "gold_ore",
+    "sprite": "assets/sprite/ores/gold_ore.png",
+    "price": 55
+  },
+  "uranium_ore": {
+    "type": "uranium_ore",
+    "sprite": "assets/sprite/ores/uranium_ore.png",
+    "price": 200
+  },
+  "enriched_copper_ore": {
+    "type": "enriched_copper_ore",
+    "sprite": "assets/sprite/items/enriched_copper_ore.png",
+    "price": 10
+  },
+  "enriched_iron_ore": {
+    "type": "enriched_iron_ore",
+    "sprite": "assets/sprite/items/enriched_iron_ore.png",
+    "price": 22
+  },
+  "enriched_gold_ore": {
+    "type": "enriched_gold_ore",
+    "sprite": "assets/sprite/items/enriched_gold_ore.png",
+    "price": 130
+  },
+  "enriched_uranium": {
+    "type": "enriched_uranium",
+    "sprite": "assets/sprite/items/enriched_uranium.png",
+    "price": 1500
+  },
+  "copper": {
+    "type": "copper",
+    "sprite": "assets/sprite/items/copper.png",
+    "price": 8
+  },
+  "glass": {
+    "type": "glass",
+    "sprite": "assets/sprite/items/glass.png",
+    "price": 12
+  },
+  "iron": {
+    "type": "iron",
+    "sprite": "assets/sprite/items/iron.png",
+    "price": 20
+  },
+  "steel": {
+    "type": "steel",
+    "sprite": "assets/sprite/items/steel.png",
+    "price": 70
+  },
+  "silicon": {
+    "type": "silicon",
+    "sprite": "assets/sprite/items/silicon.png",
+    "price": 50
+  },
+  "gold": {
+    "type": "gold",
+    "sprite": "assets/sprite/items/gold.png",
+    "price": 130
+  },
+  "plastic": {
+    "type": "plastic",
+    "sprite": "assets/sprite/items/plastic.png",
+    "price": 38
+  },
+  "rubber": {
+    "type": "rubber",
+    "sprite": "assets/sprite/items/rubber.png",
+    "price": 32
+  },
+  "copper_plate": {
+    "type": "copper_plate",
+    "sprite": "assets/sprite/items/copper_plate.png",
+    "price": 14
+  },
+  "iron_plate": {
+    "type": "iron_plate",
+    "sprite": "assets/sprite/items/iron_plate.png",
+    "price": 32
+  },
+  "wire": {
+    "type": "wire",
+    "sprite": "assets/sprite/items/wire.png",
+    "price": 12
+  },
+  "copper_coil": {
+    "type": "copper_coil",
+    "sprite": "assets/sprite/items/copper_coil.png",
+    "price": 44
+  },
+  "gold_wire": {
+    "type": "gold_wire",
+    "sprite": "assets/sprite/items/gold_wire.png",
+    "price": 95
+  },
+  "screw": {
+    "type": "screw",
+    "sprite": "assets/sprite/items/screw.png",
+    "price": 12
+  },
+  "gear": {
+    "type": "gear",
+    "sprite": "assets/sprite/items/gear.png",
+    "price": 80
+  },
+  "pipe": {
+    "type": "pipe",
+    "sprite": "assets/sprite/items/pipe.png",
+    "price": 55
+  },
+  "heat_sink": {
+    "type": "heat_sink",
+    "sprite": "assets/sprite/items/heat_sink.png",
+    "price": 130
+  },
+  "casing": {
+    "type": "casing",
+    "sprite": "assets/sprite/items/casing.png",
+    "price": 140
+  },
+  "rotor": {
+    "type": "rotor",
+    "sprite": "assets/sprite/items/rotor.png",
+    "price": 85
+  },
+  "sensor": {
+    "type": "sensor",
+    "sprite": "assets/sprite/items/sensor.png",
+    "price": 480
+  },
+  "display_panel": {
+    "type": "display_panel",
+    "sprite": "assets/sprite/items/display_panel.png",
+    "price": 130
+  },
+  "circuit": {
+    "type": "circuit",
+    "sprite": "assets/sprite/items/circuit.png",
+    "price": 100
+  },
+  "advanced_circuit": {
+    "type": "advanced_circuit",
+    "sprite": "assets/sprite/items/advanced_circuit.png",
+    "price": 650
+  },
+  "microchip": {
+    "type": "microchip",
+    "sprite": "assets/sprite/items/microchip.png",
+    "price": 500
+  },
+  "frame": {
+    "type": "frame",
+    "sprite": "assets/sprite/items/frame.png",
+    "price": 550
+  },
+  "engine": {
+    "type": "engine",
+    "sprite": "assets/sprite/items/engine.png",
+    "price": 680
+  },
+  "robotic_arm": {
+    "type": "robotic_arm",
+    "sprite": "assets/sprite/items/robotic_arm.png",
+    "price": 2400
+  },
+  "machine_part": {
+    "type": "machine_part",
+    "sprite": "assets/sprite/items/machine_part.png",
+    "price": 4200
+  },
+  "nuclear_cell": {
+    "type": "nuclear_cell",
+    "sprite": "assets/sprite/items/nuclear_cell.png",
+    "price": 2800
+  },
+  "high_tech": {
+    "type": "high_tech",
+    "sprite": "assets/sprite/items/high_tech.png",
+    "price": 13000
+  },
+  "quantum_computer": {
+    "type": "quantum_computer",
+    "sprite": "assets/sprite/items/quantum_computer.png",
+    "price": 48000
+  }
 }
