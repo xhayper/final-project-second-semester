@@ -100,16 +100,17 @@ class LoadingScene(Scene):
         if task is None:
             self._status_text = "Ready"
             self._loading_done = True
+
+            for path in self._loaded_list:
+                self.game.logger.debug("Successfully loaded sprite: %s", path)
+            for path in self._failed_list:
+                self.game.logger.error("Failed to load sprite: %s", path)
+
             self.game.logger.debug(
                 "Preloaded sprites: loaded=%d failed=%d",
                 self._preloaded_count,
                 self._failed_count,
             )
-
-            for path in self._failed_list:
-                self.game.logger.error("Failed to load sprite: %s", path)
-            for path in self._loaded_list:
-                self.game.logger.debug("Successfully loaded sprite: %s", path)
             return
 
         status, task_fn = task
