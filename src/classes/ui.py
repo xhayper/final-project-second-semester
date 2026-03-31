@@ -2,6 +2,90 @@ from __future__ import annotations
 
 
 from src.static_config import GRID_SIZE, SPRITE_LAYER
+from src.constants import (
+    COLOR_GRID_FILL,
+    COLOR_GRID_MAIN_AXIS,
+    COLOR_GRID_SECONDARY_AXIS,
+    COLOR_ICON_ERROR_BG,
+    COLOR_ICON_ERROR_BORDER,
+    COLOR_ICON_ERROR_TEXT,
+    COLOR_PLACEMENT_VALID,
+    COLOR_PLACEMENT_INVALID,
+    COLOR_PLACEMENT_BORDER,
+    COLOR_ZOOM_PANEL_BG,
+    COLOR_ZOOM_PANEL_BORDER,
+    COLOR_ZOOM_TEXT,
+    COLOR_INFO_PANEL_BG,
+    COLOR_INFO_PANEL_BORDER,
+    COLOR_INFO_PANEL_TEXT,
+    COLOR_DEBUG_VISIBLE,
+    COLOR_DEBUG_INVISIBLE,
+    COLOR_DEBUG_BELT_LINK,
+    COLOR_RECIPE_OVERLAY,
+    COLOR_RECIPE_TITLE,
+    COLOR_RECIPE_LEFT_PANEL_BG,
+    COLOR_RECIPE_LEFT_PANEL_BORDER,
+    COLOR_RECIPE_ROW_SELECTED_BG,
+    COLOR_RECIPE_ROW_UNSELECTED_BG,
+    COLOR_RECIPE_ROW_SELECTED_BORDER,
+    COLOR_RECIPE_LABEL_TEXT,
+    COLOR_RECIPE_COST_TEXT,
+    COLOR_RECIPE_RIGHT_PANEL_BG,
+    COLOR_RECIPE_RIGHT_PANEL_BORDER,
+    COLOR_RECIPE_MACHINE_TITLE,
+    COLOR_RECIPE_DESCRIPTION,
+    COLOR_RECIPE_NO_RECIPES,
+    COLOR_RECIPE_CARD_BG,
+    COLOR_RECIPE_CARD_BORDER,
+    COLOR_RECIPE_DURATION,
+    COLOR_RECIPE_INPUT_AMOUNT,
+    COLOR_RECIPE_INPUT_NAME,
+    COLOR_RECIPE_ARROW,
+    COLOR_RECIPE_OUTPUT_AMOUNT,
+    COLOR_RECIPE_OUTPUT_NAME,
+    COLOR_MODE_PANEL_BG,
+    COLOR_MODE_PANEL_BORDER,
+    COLOR_MODE_TEXT,
+    COLOR_CASH_TEXT,
+    COLOR_HINT_TEXT,
+    COLOR_SELECTOR_SELECTED_BORDER,
+    COLOR_SELECTOR_UNSELECTED_BORDER,
+    FONT_MAIN_SIZE,
+    FONT_ICON_SIZE,
+    FONT_MEDIUM_SIZE,
+    UI_ZOOM_PANEL_X_OFFSET,
+    UI_ZOOM_PANEL_WIDTH,
+    UI_ZOOM_PANEL_HEIGHT,
+    UI_INFO_PANEL_MAX_WIDTH,
+    UI_INFO_PANEL_X_PADDING,
+    UI_INFO_PANEL_Y_OFFSET,
+    UI_INFO_PANEL_LINE_HEIGHT,
+    UI_INFO_PANEL_PADDING,
+    UI_INFO_PANEL_Y_PADDING,
+    UI_MODE_PANEL_X,
+    UI_MODE_PANEL_Y,
+    UI_MODE_PANEL_WIDTH,
+    UI_MODE_PANEL_HEIGHT,
+    UI_RECIPE_BOOK_LEFT_X,
+    UI_RECIPE_BOOK_LEFT_Y,
+    UI_RECIPE_BOOK_LEFT_W,
+    UI_RECIPE_BOOK_ITEM_H,
+    UI_RECIPE_BOOK_LEFT_PADDING,
+    UI_RECIPE_BOOK_LEFT_MARGIN,
+    UI_RECIPE_BOOK_RIGHT_LEFT_MARGIN,
+    UI_RECIPE_CARD_HEIGHT,
+    UI_RECIPE_CARD_ICON_SIZE,
+    UI_RECIPE_CARD_ICON_Y,
+    UI_RECIPE_CARD_AMOUNT_Y,
+    UI_RECIPE_CARD_NAME_Y,
+    UI_RECIPE_CARD_DURATION_COL_WIDTH,
+    UI_SELECTOR_ICON_MARGIN,
+    UI_TEXT_RECIPE_BOOK_TITLE,
+    UI_TEXT_MINER_DESCRIPTION,
+    UI_TEXT_SELLER_DESCRIPTION,
+    UI_TEXT_NO_RECIPES,
+    UI_TEXT_HINT,
+)
 from src.classes import EventEmitter, ImageCache
 from pygame.sprite import DirtySprite
 from src.objects import Machine, Belt
@@ -53,7 +137,7 @@ class GridSprite(DirtySprite):
         width = self.rect.width
         height = self.rect.height
 
-        self.image.fill((0, 0, 0, 0))
+        self.image.fill(COLOR_GRID_FILL)
 
         zoom = self.game.camera.zoom
         cam_x = self.game.camera.position.x
@@ -64,7 +148,7 @@ class GridSprite(DirtySprite):
         world_x = first_world_x
         while world_x <= last_world_x:
             screen_x = int((world_x - cam_x) * zoom)
-            color = (90, 90, 90, 255) if world_x == 0 else (55, 55, 55, 255)
+            color = COLOR_GRID_MAIN_AXIS if world_x == 0 else COLOR_GRID_SECONDARY_AXIS
             draw.line(self.image, color, (screen_x, 0), (screen_x, height), 1)
             world_x += GRID_SIZE
 
@@ -73,7 +157,7 @@ class GridSprite(DirtySprite):
         world_y = first_world_y
         while world_y <= last_world_y:
             screen_y = int((world_y - cam_y) * zoom)
-            color = (90, 90, 90, 255) if world_y == 0 else (55, 55, 55, 255)
+            color = COLOR_GRID_MAIN_AXIS if world_y == 0 else COLOR_GRID_SECONDARY_AXIS
             draw.line(self.image, color, (0, screen_y), (width, screen_y), 1)
             world_y += GRID_SIZE
 
@@ -100,8 +184,9 @@ class UI(EventEmitter, DirtySprite):
         self.visible = 1
         if not freetype.get_init():
             freetype.init()
-        self._font = freetype.SysFont("Arial", 20, bold=True)
-        self._icon_font = freetype.SysFont("Arial", 10, bold=True)
+        self._font = freetype.SysFont("Arial", FONT_MAIN_SIZE, bold=True)
+        self._icon_font = freetype.SysFont("Arial", FONT_ICON_SIZE, bold=True)
+        self._medium_font = freetype.SysFont("Arial", FONT_MEDIUM_SIZE, bold=False)
         self._icon_cache: dict[str, Surface] = {}
 
         self.game.camera.on("resize", self._on_resize)
@@ -113,8 +198,6 @@ class UI(EventEmitter, DirtySprite):
 
     def __del__(self):
         self.destroy()
-
-    ####
 
     def _on_resize(self):
         self.image = Surface(display.get_window_size(), SRCALPHA).convert_alpha()
@@ -134,15 +217,15 @@ class UI(EventEmitter, DirtySprite):
         if option.kind == "machine" and option.machine_type is not None:
             return self.game.data.get_machine_data(option.machine_type)["sprite"]
 
-        return "assets/unknown.png"
+        return "assets/sprite/unknown.png"
 
     def _placeholder_icon(self, path: str, size: tuple[int, int]) -> Surface:
         icon = Surface(size, SRCALPHA).convert_alpha()
-        icon.fill((255, 80, 80, 255))
-        draw.rect(icon, (35, 35, 35, 255), icon.get_rect(), width=2)
+        icon.fill(COLOR_ICON_ERROR_BG)
+        draw.rect(icon, COLOR_ICON_ERROR_BORDER, icon.get_rect(), width=2)
 
         text = path.split("/")[-1]
-        label, _ = self._icon_font.render(text, (20, 20, 20, 255))
+        label, _ = self._icon_font.render(text, COLOR_ICON_ERROR_TEXT)
         label_rect = label.get_rect(center=(size[0] // 2, size[1] // 2))
         icon.blit(label, label_rect)
         return icon
@@ -196,9 +279,9 @@ class UI(EventEmitter, DirtySprite):
         tile_rect = Rect(int(screen_tile.x), int(screen_tile.y), tile_size, tile_size)
 
         can_place = self._can_place_selected(selected, grid_pos)
-        tile_color = (70, 180, 90, 80) if can_place else (200, 70, 70, 90)
+        tile_color = COLOR_PLACEMENT_VALID if can_place else COLOR_PLACEMENT_INVALID
         draw.rect(self.image, tile_color, tile_rect)
-        draw.rect(self.image, (220, 220, 220, 180), tile_rect, width=2)
+        draw.rect(self.image, COLOR_PLACEMENT_BORDER, tile_rect, width=2)
 
         icon_side = max(1, tile_size - 8)
         icon_size = (icon_side, icon_side)
@@ -224,14 +307,14 @@ class UI(EventEmitter, DirtySprite):
         return None
 
     def _draw_zoom_info(self):
-        zoom_panel = Rect(self.rect.width - 132, 12, 120, 44)
-        draw.rect(self.image, (18, 18, 18, 210), zoom_panel, border_radius=6)
+        zoom_panel = Rect(self.rect.width - UI_ZOOM_PANEL_X_OFFSET, UI_ZOOM_PANEL_HEIGHT - UI_ZOOM_PANEL_HEIGHT + 12, UI_ZOOM_PANEL_WIDTH, UI_ZOOM_PANEL_HEIGHT)
+        draw.rect(self.image, COLOR_ZOOM_PANEL_BG, zoom_panel, border_radius=6)
         draw.rect(
-            self.image, (150, 150, 150, 255), zoom_panel, width=2, border_radius=6
+            self.image, COLOR_ZOOM_PANEL_BORDER, zoom_panel, width=2, border_radius=6
         )
 
         zoom_text, _ = self._font.render(
-            f"Zoom: {self.game.camera.zoom:.2f}x", (240, 240, 240)
+            f"Zoom: {self.game.camera.zoom:.2f}x", COLOR_ZOOM_TEXT
         )
         text_rect = zoom_text.get_rect(center=zoom_panel.center)
         self.image.blit(zoom_text, text_rect)
@@ -247,29 +330,31 @@ class UI(EventEmitter, DirtySprite):
         lines = [f"Position: {machine.position}"]
 
         if isinstance(machine, Miner):
+            lines.append("Machine type: Miner")
             lines.append(f"Ore type: {machine.ore_type}")
             lines.append(f"Timer: {machine.timer}")
         elif isinstance(machine, Seller):
-            pass
+            lines.append("Machine type: Seller")
         else:
+            lines.append(f"Machine type: {machine.type}")
             lines.append(f"Timer: {machine.timer}")
             lines.append(f"Inventory: {machine.inventory}")
 
-        panel_width = min(420, self.rect.width - 24)
-        panel_x = self.rect.width - panel_width - 12
-        panel_y = 64
-        line_height = 18
-        panel_height = 12 + (line_height * len(lines)) + 10
+        panel_width = min(UI_INFO_PANEL_MAX_WIDTH, self.rect.width - 24)
+        panel_x = self.rect.width - panel_width - UI_INFO_PANEL_X_PADDING
+        panel_y = UI_INFO_PANEL_Y_OFFSET
+        line_height = UI_INFO_PANEL_LINE_HEIGHT
+        panel_height = UI_INFO_PANEL_PADDING + (line_height * len(lines)) + UI_INFO_PANEL_Y_PADDING
         info_panel = Rect(panel_x, panel_y, panel_width, panel_height)
-        draw.rect(self.image, (18, 18, 18, 220), info_panel, border_radius=6)
+        draw.rect(self.image, COLOR_INFO_PANEL_BG, info_panel, border_radius=6)
         draw.rect(
-            self.image, (110, 170, 255, 255), info_panel, width=2, border_radius=6
+            self.image, COLOR_INFO_PANEL_BORDER, info_panel, width=2, border_radius=6
         )
 
-        y = info_panel.y + 8
+        y = info_panel.y + UI_INFO_PANEL_PADDING
         for line in lines:
-            text_surf, _ = self._icon_font.render(line, (230, 230, 230, 255))
-            self.image.blit(text_surf, (info_panel.x + 8, y))
+            text_surf, _ = self._icon_font.render(line, COLOR_INFO_PANEL_TEXT)
+            self.image.blit(text_surf, (info_panel.x + UI_INFO_PANEL_PADDING, y))
             y += line_height
 
     def _draw_debug_rects(self):
@@ -278,7 +363,7 @@ class UI(EventEmitter, DirtySprite):
             debug_rect = x.screen_rect.copy()
             draw.rect(
                 self.image,
-                (0, 255, 0, 255) if x.visible else (255, 0, 0, 255),
+                COLOR_DEBUG_VISIBLE if x.visible else COLOR_DEBUG_INVISIBLE,
                 debug_rect,
                 width=1,
             )
@@ -317,17 +402,154 @@ class UI(EventEmitter, DirtySprite):
 
                 draw.line(
                     self.image,
-                    (0, 255, 0, 255),
+                    COLOR_DEBUG_BELT_LINK,
                     a_line,
                     b_line,
                     width=1,
                 )
 
+    def _get_item_icon(self, sprite_path: str, size: tuple[int, int]) -> Surface:
+        cache_key = f"{sprite_path}:{size[0]}x{size[1]}"
+        if cache_key in self._icon_cache:
+            return self._icon_cache[cache_key]
+        loaded = ImageCache.get(sprite_path)
+        if loaded is not None:
+            icon = transform.scale(loaded, size)
+        else:
+            icon = self._placeholder_icon(sprite_path, size)
+        self._icon_cache[cache_key] = icon
+        return icon
+
+    def _draw_recipe_book(self):
+        from src.classes.data import Data
+
+        screen_w, screen_h = self.rect.width, self.rect.height
+
+        overlay = Surface((screen_w, screen_h), SRCALPHA)
+        overlay.fill(COLOR_RECIPE_OVERLAY)
+        self.image.blit(overlay, (0, 0))
+
+        title_surf, _ = self._font.render(UI_TEXT_RECIPE_BOOK_TITLE, COLOR_RECIPE_TITLE)
+        self.image.blit(title_surf, (screen_w // 2 - title_surf.get_width() // 2, 10))
+
+        machines = [k for k in Data.machine_data.keys() if k != "unknown"]
+
+        LEFT_X, LEFT_Y, LEFT_W, ITEM_H = UI_RECIPE_BOOK_LEFT_X, UI_RECIPE_BOOK_LEFT_Y, UI_RECIPE_BOOK_LEFT_W, UI_RECIPE_BOOK_ITEM_H
+        left_panel = Rect(LEFT_X, LEFT_Y, LEFT_W, screen_h - LEFT_Y - UI_RECIPE_BOOK_LEFT_MARGIN)
+        draw.rect(self.image, COLOR_RECIPE_LEFT_PANEL_BG, left_panel, border_radius=8)
+        draw.rect(self.image, COLOR_RECIPE_LEFT_PANEL_BORDER, left_panel, width=1, border_radius=8)
+
+        scroll = self.game.input.recipe_book_scroll
+        selected_idx = self.game.input.recipe_book_machine_idx
+        y = LEFT_Y + UI_RECIPE_BOOK_LEFT_PADDING
+        for i, machine_type in enumerate(machines):
+            if i < scroll:
+                continue
+            if y + ITEM_H > left_panel.bottom - UI_RECIPE_BOOK_LEFT_PADDING:
+                break
+            row = Rect(LEFT_X + 4, y, LEFT_W - 8, ITEM_H - 3)
+            is_sel = (i == selected_idx)
+            draw.rect(self.image, COLOR_RECIPE_ROW_SELECTED_BG if is_sel else COLOR_RECIPE_ROW_UNSELECTED_BG, row, border_radius=4)
+            if is_sel:
+                draw.rect(self.image, COLOR_RECIPE_ROW_SELECTED_BORDER, row, width=1, border_radius=4)
+
+            sprite_path = Data.machine_data[machine_type]["sprite"]
+            icon = self._get_item_icon(sprite_path, (28, 28))
+            self.image.blit(icon, (row.x + 4, row.y + 6))
+
+            label = machine_type.replace("_", " ").title()
+            lbl_surf, _ = self._medium_font.render(label, COLOR_RECIPE_LABEL_TEXT)
+            self.image.blit(lbl_surf, (row.x + 36, row.y + 4))
+            cost = Data.machine_data[machine_type]["cost"]
+            cost_surf, _ = self._icon_font.render(f"${cost:,}", COLOR_RECIPE_COST_TEXT)
+            self.image.blit(cost_surf, (row.x + 36, row.y + 22))
+            y += ITEM_H
+
+        RIGHT_X = LEFT_X + LEFT_W + UI_RECIPE_BOOK_RIGHT_LEFT_MARGIN
+        right_panel = Rect(RIGHT_X, LEFT_Y, screen_w - RIGHT_X - 10, screen_h - LEFT_Y - 10)
+        draw.rect(self.image, COLOR_RECIPE_RIGHT_PANEL_BG, right_panel, border_radius=8)
+        draw.rect(self.image, COLOR_RECIPE_RIGHT_PANEL_BORDER, right_panel, width=1, border_radius=8)
+
+        if selected_idx >= len(machines):
+            return
+        machine_type = machines[selected_idx]
+        machine_data = Data.machine_data[machine_type]
+        recipes = machine_data["recipes"]
+
+        title2, _ = self._font.render(machine_type.replace("_", " ").title(), COLOR_RECIPE_MACHINE_TITLE)
+        self.image.blit(title2, (right_panel.x + 12, right_panel.y + 8))
+
+        desc_y = right_panel.y + 36
+        if machine_type == "miner":
+            desc, _ = self._medium_font.render(UI_TEXT_MINER_DESCRIPTION, COLOR_RECIPE_DESCRIPTION)
+            self.image.blit(desc, (right_panel.x + 12, desc_y))
+            return
+        if machine_type == "seller":
+            desc, _ = self._medium_font.render(UI_TEXT_SELLER_DESCRIPTION, COLOR_RECIPE_DESCRIPTION)
+            self.image.blit(desc, (right_panel.x + 12, desc_y))
+            return
+        if not recipes:
+            desc, _ = self._medium_font.render(UI_TEXT_NO_RECIPES, COLOR_RECIPE_NO_RECIPES)
+            self.image.blit(desc, (right_panel.x + 12, desc_y))
+            return
+
+        RECIPE_H = UI_RECIPE_CARD_HEIGHT
+        ICON_SIZE = UI_RECIPE_CARD_ICON_SIZE
+        ICON_Y = UI_RECIPE_CARD_ICON_Y
+        AMOUNT_Y = UI_RECIPE_CARD_AMOUNT_Y
+        NAME_Y = UI_RECIPE_CARD_NAME_Y
+        CARD_H = RECIPE_H - 4
+        DUR_COL_W = UI_RECIPE_CARD_DURATION_COL_WIDTH
+
+        ry = desc_y
+        for recipe in recipes:
+            if ry + RECIPE_H > right_panel.bottom - 8:
+                break
+            card = Rect(right_panel.x + 8, ry, right_panel.width - 16, CARD_H)
+            draw.rect(self.image, COLOR_RECIPE_CARD_BG, card, border_radius=5)
+            draw.rect(self.image, COLOR_RECIPE_CARD_BORDER, card, width=1, border_radius=5)
+
+            dur_surf, _ = self._medium_font.render(f"{recipe['duration']}s", COLOR_RECIPE_DURATION)
+            dur_y = card.y + (CARD_H - dur_surf.get_height()) // 2
+            self.image.blit(dur_surf, (card.x + 6, dur_y))
+
+            rx = card.x + DUR_COL_W
+
+            for inp in recipe["inputs"]:
+                item_d = Data.get_item_data(inp["type"])
+                icon = self._get_item_icon(item_d["sprite"], (ICON_SIZE, ICON_SIZE))
+                self.image.blit(icon, (rx, card.y + ICON_Y))
+                amount_surf, _ = self._icon_font.render(f"×{inp['amount']}", COLOR_RECIPE_INPUT_AMOUNT)
+                self.image.blit(amount_surf, (rx, card.y + AMOUNT_Y))
+                name_surf, _ = self._icon_font.render(inp["type"].replace("_", " "), COLOR_RECIPE_INPUT_NAME)
+                self.image.blit(name_surf, (rx, card.y + NAME_Y))
+                col_w = max(ICON_SIZE + 6, name_surf.get_width() + 6)
+                rx += col_w + 4
+
+            arrow_surf, _ = self._font.render("→", COLOR_RECIPE_ARROW)
+            arrow_y = card.y + (CARD_H - arrow_surf.get_height()) // 2
+            self.image.blit(arrow_surf, (rx, arrow_y))
+            rx += arrow_surf.get_width() + 8
+
+            for out in recipe["outputs"]:
+                item_d = Data.get_item_data(out["type"])
+                price = item_d.get("price", 0)
+                icon = self._get_item_icon(item_d["sprite"], (ICON_SIZE, ICON_SIZE))
+                self.image.blit(icon, (rx, card.y + ICON_Y))
+                amount_surf, _ = self._icon_font.render(f"×{out['amount']}", COLOR_RECIPE_OUTPUT_AMOUNT)
+                self.image.blit(amount_surf, (rx, card.y + AMOUNT_Y))
+                name_surf, _ = self._icon_font.render(f"{out['type'].replace('_', ' ')}  ${price:,}", COLOR_RECIPE_OUTPUT_NAME)
+                self.image.blit(name_surf, (rx, card.y + NAME_Y))
+                col_w = max(ICON_SIZE + 6, name_surf.get_width() + 6)
+                rx += col_w + 4
+
+            ry += RECIPE_H
+
     def _redraw(self):
         assert self.image is not None
         assert self.rect is not None
 
-        self.image.fill((0, 0, 0, 0))
+        self.image.fill(COLOR_GRID_FILL)
 
         selectors = self.game.input.selectors
         selected = self.game.input.selected_obj
@@ -339,22 +561,22 @@ class UI(EventEmitter, DirtySprite):
             3: "REMOVE",
         }
 
-        mode_panel = Rect(12, 12, 230, 68)
-        draw.rect(self.image, (18, 18, 18, 210), mode_panel, border_radius=6)
+        mode_panel = Rect(UI_MODE_PANEL_X, UI_MODE_PANEL_Y, UI_MODE_PANEL_WIDTH, UI_MODE_PANEL_HEIGHT)
+        draw.rect(self.image, COLOR_MODE_PANEL_BG, mode_panel, border_radius=6)
         draw.rect(
-            self.image, (150, 150, 150, 255), mode_panel, width=2, border_radius=6
+            self.image, COLOR_MODE_PANEL_BORDER, mode_panel, width=2, border_radius=6
         )
 
         mode_text, _ = self._font.render(
-            f"Mode: {mode_names.get(mode, 'UNKNOWN')}", (240, 240, 240)
+            f"Mode: {mode_names.get(mode, 'UNKNOWN')}", COLOR_MODE_TEXT
         )
         cash_text, _ = self._font.render(
-            f"Cash: ${int(self.game.data.cash)}", (130, 220, 130)
+            f"Cash: ${int(self.game.data.cash):,}", COLOR_CASH_TEXT
         )
-        hint_text, _ = self._font.render("(press M to switch)", (170, 170, 170))
-        self.image.blit(mode_text, (mode_panel.x + 10, mode_panel.y + 4))
-        self.image.blit(cash_text, (mode_panel.x + 10, mode_panel.y + 23))
-        self.image.blit(hint_text, (mode_panel.x + 10, mode_panel.y + 42))
+        hint_text, _ = self._medium_font.render(UI_TEXT_HINT, COLOR_HINT_TEXT)
+        self.image.blit(mode_text, (mode_panel.x + 10, mode_panel.y + 8))
+        self.image.blit(cash_text, (mode_panel.x + 10, mode_panel.y + 34))
+        self.image.blit(hint_text, (mode_panel.x + 10, mode_panel.y + 62))
 
         y = self.rect.height - 16 - GRID_SIZE
         x = 0
@@ -364,14 +586,14 @@ class UI(EventEmitter, DirtySprite):
 
             bg = (35, 35, 35, 220) if mode == 1 else (20, 20, 20, 170)
             border = (
-                (255, 220, 90, 255)
+                COLOR_SELECTOR_SELECTED_BORDER
                 if option is selected and mode == 1
-                else (110, 110, 110, 230)
+                else COLOR_SELECTOR_UNSELECTED_BORDER
             )
             draw.rect(self.image, bg, slot)
             draw.rect(self.image, border, slot, width=2)
 
-            icon_rect = slot.inflate(-22, -22)
+            icon_rect = slot.inflate(-UI_SELECTOR_ICON_MARGIN, -UI_SELECTOR_ICON_MARGIN)
             icon = self._get_selector_icon(option, (icon_rect.width, icon_rect.height))
             self.image.blit(icon, icon_rect)
             x += GRID_SIZE
@@ -379,6 +601,9 @@ class UI(EventEmitter, DirtySprite):
         self._draw_cursor_preview(selected, mode)
         self._draw_zoom_info()
         self._draw_hovered_machine_info()
+
+        if self.game.input.recipe_book_open:
+            self._draw_recipe_book()
 
         if self.game.DEBUG:
             self._draw_debug_rects()

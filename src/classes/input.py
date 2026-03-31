@@ -2,6 +2,17 @@ from __future__ import annotations
 
 from src.objects import Machine, Belt, Item
 from src.static_config import GRID_SIZE
+from src.constants import (
+    INPUT_DEFAULT_DIRECTION,
+    INPUT_DEFAULT_MODE,
+    INPUT_DIRECTION_MAX,
+    INPUT_DIRECTION_MIN,
+    INPUT_MODE_MAX,
+    INPUT_MODE_MIN,
+    INPUT_RECIPE_BOOK_VISIBLE_ITEMS,
+    ZOOM_SCROLL_MULTIPLIER,
+    ZOOM_KEYBOARD_STEP,
+)
 from src.machines import Seller, Miner
 from typing import TYPE_CHECKING, Any
 from src.classes import EventEmitter
@@ -25,13 +36,17 @@ class Input(EventEmitter):
         super().__init__()
 
         self.game = game
-        self.direction = 1
-        self.mode = 2
+        self.direction = INPUT_DEFAULT_DIRECTION
+        self.mode = INPUT_DEFAULT_MODE
         self.selected_obj: SelectorOption | None = None
 
         self.start_pos: Vector2 | None = None
         self.cam_start_pos: Vector2 | None = None
         self.obj_start_pos: list[Any] | None = None
+
+        self.recipe_book_open: bool = False
+        self.recipe_book_machine_idx: int = 0
+        self.recipe_book_scroll: int = 0
 
         self.selectors: list[SelectorOption] = [
             SelectorOption(kind="belt", cost=0),
@@ -92,8 +107,8 @@ class Input(EventEmitter):
                 return
 
         self.direction += 1
-        if self.direction > 4:
-            self.direction = 1
+        if self.direction > INPUT_DIRECTION_MAX:
+            self.direction = INPUT_DIRECTION_MIN
         if self.direction < 1:
             self.direction = 4
 
@@ -167,8 +182,12 @@ class Input(EventEmitter):
         self.game.request_flip(False)
 
     def __on_mousewheel(self, value: dict[str, Any]):
-        # Key: Mouse wheel
-        delta = float(value.get("y", 0)) * 0.1
+        if self.recipe_book_open:
+            machines = [k for k in self.game.data.machine_data.keys() if k != "unknown"]
+            self.recipe_book_scroll = max(0, min(len(machines) - 1, self.recipe_book_scroll - int(value.get("y", 0))))
+            return
+
+        delta = float(value.get("y", 0)) * ZOOM_SCROLL_MULTIPLIER
         if delta == 0:
             return
 
@@ -181,6 +200,16 @@ class Input(EventEmitter):
         # Key: Left click
         pos = Vector2(value["pos"][0], value["pos"][1])
         grid_position = self._grid_position_from_screen(pos)
+
+        if self.recipe_book_open:
+            machines = [k for k in self.game.data.machine_data.keys() if k != "unknown"]
+            left_panel_x, left_panel_y, left_panel_w, item_h = 10, 40, 210, 40
+            if left_panel_x <= pos.x <= left_panel_x + left_panel_w and pos.y >= left_panel_y:
+                rel_y = pos.y - left_panel_y - 8
+                clicked_idx = int(rel_y // item_h) + self.recipe_book_scroll
+                if 0 <= clicked_idx < len(machines):
+                    self.recipe_book_machine_idx = clicked_idx
+            return
 
         if self.mode == 1:
             _, height = pygame.display.get_window_size()
@@ -227,32 +256,44 @@ class Input(EventEmitter):
         pass
 
     def __on_keydown(self, value: dict[str, Any]):
-        # Key: +
+        if value["key"] == pygame.K_TAB:
+            self.recipe_book_open = not self.recipe_book_open
+            return
+
+        if self.recipe_book_open:
+            machines = [k for k in self.game.data.machine_data.keys() if k != "unknown"]
+            visible_count = INPUT_RECIPE_BOOK_VISIBLE_ITEMS
+            if value["key"] == pygame.K_UP:
+                self.recipe_book_machine_idx = max(0, self.recipe_book_machine_idx - 1)
+            elif value["key"] == pygame.K_DOWN:
+                self.recipe_book_machine_idx = min(len(machines) - 1, self.recipe_book_machine_idx + 1)
+            if self.recipe_book_machine_idx < self.recipe_book_scroll:
+                self.recipe_book_scroll = self.recipe_book_machine_idx
+            elif self.recipe_book_machine_idx >= self.recipe_book_scroll + visible_count:
+                self.recipe_book_scroll = self.recipe_book_machine_idx - visible_count + 1
+            return
+
         if value["key"] in [pygame.K_EQUALS, pygame.K_KP_PLUS]:
-            self.game.camera.adjust_zoom(0.1)
+            self.game.camera.adjust_zoom(ZOOM_KEYBOARD_STEP)
 
-        # Key: -
         if value["key"] in [pygame.K_MINUS, pygame.K_KP_MINUS]:
-            self.game.camera.adjust_zoom(-0.1)
+            self.game.camera.adjust_zoom(-ZOOM_KEYBOARD_STEP)
 
-        # Key: R
         if value["key"] == 114:
             mouse_pos = Vector2(mouse.get_pos())
             grid_position = self._grid_position_from_screen(mouse_pos)
             self._rotate_object_or_selection(grid_position)
 
-        # Key: D
         if value["key"] == 100:
             setattr(self.game, "DEBUG", not bool(self.game.DEBUG))
 
-        # Key: M
         if value["key"] == 109:
             self.mode += 1
 
-            if self.mode > 3:
-                self.mode = 1
-            if self.mode < 1:
-                self.mode = 3
+            if self.mode > INPUT_MODE_MAX:
+                self.mode = INPUT_MODE_MIN
+            if self.mode < INPUT_MODE_MIN:
+                self.mode = INPUT_MODE_MAX
 
             if self.mode == 1:
                 self.selected_obj = (

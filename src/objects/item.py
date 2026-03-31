@@ -3,6 +3,7 @@ from __future__ import annotations
 
 from src.classes.data import Data, ItemData
 from src.static_config import SPRITE_LAYER
+from src.constants import ITEM_DESPAWN_TIMEOUT
 from src.objects.sprite import Sprite
 from typing import TYPE_CHECKING, Any
 from src.objects.belt import Belt
@@ -96,7 +97,7 @@ class Item(Sprite):
 
         self.despawn_timer += dt
 
-        if self.despawn_timer >= 15:
+        if self.despawn_timer >= ITEM_DESPAWN_TIMEOUT:
             self._despawn_reason = "timeout"
             if self._track_statistics:
                 self.game.data.statistics.record_item_despawn(

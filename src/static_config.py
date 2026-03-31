@@ -1,13 +1,6 @@
 from __future__ import annotations
 
-from enum import IntEnum
-
-
-class DIRECTION(IntEnum):
-    FORWARD = 0
-    LEFT = 1
-    BACKWARD = 2
-    RIGHT = 3
+from src.constants import DIRECTION, SPRITE_LAYER, GRID_SIZE, CULLING_DISABLED
 
 
 def rotate_90(v: tuple[int, int]):
@@ -34,18 +27,3 @@ for angle in (0, 90, 180, 270):
             rotated = rotate_90(rotated)
 
         ROTATION_DIRECTION_VECTOR[angle][direction] = rotated
-
-
-class SPRITE_LAYER(IntEnum):
-    BG = 0
-    GRID = 1
-    DEFAULT = 2
-    TILE = 3
-    ITEM = 4
-    DEBUG = 5
-    UI = 6
-
-
-GRID_SIZE = 64
-# FOR TESTING PURPOSE.
-CULLING_DISABLED = False

@@ -14,7 +14,7 @@ class GameScene(Scene):
     def __init__(self, game: Game):
         super().__init__(game, "game")
         self._loaded_slot: str | None = None
-        self._menu_button_rect = Rect(14, 90, 150, 36)
+        self._menu_button_rect = Rect(14, 102, 150, 36)
 
         if not freetype.get_init():
             freetype.init()
@@ -35,7 +35,7 @@ class GameScene(Scene):
 
     def handle_event(self, evt: pygame.event.Event):
         if evt.type == pygame.MOUSEBUTTONDOWN and getattr(evt, "button", 0) == 1:
-            if self._menu_button_rect.collidepoint(evt.pos):
+            if not self.game.input.recipe_book_open and self._menu_button_rect.collidepoint(evt.pos):
                 self.game.scene_manager.change_scene("main_menu")
                 return
 
@@ -52,6 +52,8 @@ class GameScene(Scene):
         self.game.render_game_scene(surface, overlay_draw=self._draw_menu_button)
 
     def _draw_menu_button(self, surface: Surface):
+        if self.game.input.recipe_book_open:
+            return
         draw.rect(surface, (32, 36, 43), self._menu_button_rect, border_radius=8)
         draw.rect(
             surface,

@@ -19,6 +19,8 @@ class LoadingScene(Scene):
         self._status_text = "Preparing loader..."
         self._preloaded_count = 0
         self._failed_count = 0
+        self._failed_list: list[str] = []
+        self._loaded_list: list[str] = []
         self._built_sprite_tasks = False
         self._loading_done = False
 
@@ -45,8 +47,10 @@ class LoadingScene(Scene):
             def load_sprite(sprite_path: str = path):
                 loaded = ImageCache.get(sprite_path)
                 if loaded is None:
+                    self._failed_list.append(sprite_path)
                     self._failed_count += 1
                 else:
+                    self._loaded_list.append(sprite_path)
                     self._preloaded_count += 1
 
             sprite_tasks.append((f"Preloading sprite: {path}", load_sprite))
@@ -101,6 +105,11 @@ class LoadingScene(Scene):
                 self._preloaded_count,
                 self._failed_count,
             )
+
+            for path in self._failed_list:
+                self.game.logger.error("Failed to load sprite: %s", path)
+            for path in self._loaded_list:
+                self.game.logger.debug("Successfully loaded sprite: %s", path)
             return
 
         status, task_fn = task

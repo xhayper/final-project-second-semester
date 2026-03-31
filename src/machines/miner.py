@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 from src.objects import Machine, Item
+from src.constants import MINER_PRODUCTION_INTERVAL
 from pygame import Vector2
 
 if TYPE_CHECKING:
@@ -39,7 +40,7 @@ class Miner(Machine):
     def update(self, dt: float):
         self.timer += dt
 
-        if self.timer >= 3:
+        if self.timer >= MINER_PRODUCTION_INTERVAL:
             self.output_item(f"{self.ore_type}_ore")
             self.timer = 0
 

@@ -3,6 +3,7 @@ from __future__ import annotations
 from pygame import Rect, Vector2, display
 from typing import TYPE_CHECKING, Any
 from . import EventEmitter
+from src.constants import ZOOM_DEFAULT, ZOOM_MIN, ZOOM_MAX, ZOOM_TOLERANCE
 import pygame
 
 
@@ -18,9 +19,9 @@ class Camera(EventEmitter):
         self.game = game
         self._position = position if position else Vector2(0)
         self._size = Vector2(display.get_window_size())
-        self._zoom = 1.0
-        self._min_zoom = 0.5
-        self._max_zoom = 3.0
+        self._zoom = ZOOM_DEFAULT
+        self._min_zoom = ZOOM_MIN
+        self._max_zoom = ZOOM_MAX
 
         self.game.on(f"PYGAME_{pygame.WINDOWRESIZED}", self.__on_window_resized)
 
@@ -52,7 +53,7 @@ class Camera(EventEmitter):
 
     def set_zoom(self, value: float, focus_screen_pos: Vector2 | None = None):
         clamped = max(self._min_zoom, min(self._max_zoom, float(value)))
-        if abs(clamped - self._zoom) < 1e-6:
+        if abs(clamped - self._zoom) < ZOOM_TOLERANCE:
             return
 
         focus = focus_screen_pos if focus_screen_pos is not None else self._size / 2

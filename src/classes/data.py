@@ -2,6 +2,15 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any, Callable, TypedDict, cast
 from src.statistics import StatisticsTracker
+from src.constants import (
+    FILE_MACHINES_DATA,
+    FILE_ITEMS_DATA,
+    FILE_UNKNOWN_MACHINE_SPRITE,
+    FILE_UNKNOWN_ITEM_SPRITE,
+    GAME_INITIAL_CASH,
+    GAME_DEFAULT_SAVE_CASH,
+    GAME_LOAD_FALLBACK_CASH,
+)
 import json
 import os
 
@@ -35,13 +44,13 @@ class ItemData(TypedDict):
 
 
 class Data:
-    MACHINE_DATA_PATH = "assets/data/machines.json"
-    ITEMS_DATA_PATH = "assets/data/items.json"
+    MACHINE_DATA_PATH = FILE_MACHINES_DATA
+    ITEMS_DATA_PATH = FILE_ITEMS_DATA
 
     machine_data: dict[str, MachineData] = {
         "unknown": {
             "type": "unknown",
-            "sprite": "assets/sprite/x.png",
+            "sprite": FILE_UNKNOWN_MACHINE_SPRITE,
             "cost": 99999999999999,
             "recipes": [],
         }
@@ -49,7 +58,7 @@ class Data:
     items_data: dict[str, ItemData] = {
         "unknown": {
             "type": "unknown",
-            "sprite": "assets/sprite/x.png",
+            "sprite": FILE_UNKNOWN_ITEM_SPRITE,
             "price": 99999999999999,
         }
     }
@@ -86,7 +95,7 @@ class Data:
     def get_sprite_paths() -> list[str]:
         paths: list[str] = [
             "assets/sprite/belt.png",
-            "assets/unknown.png",
+            "assets/sprite/unknown.png",
             "assets/sprite/x.png",
         ]
 
@@ -102,7 +111,7 @@ class Data:
 
     def __init__(self, game: Game):
         self.game = game
-        self.cash = 100
+        self.cash = GAME_INITIAL_CASH
         self.statistics = StatisticsTracker()
 
     def _statistics_path(self, save_path: str) -> str:
@@ -118,7 +127,7 @@ class Data:
 
         if not os.path.exists(path):
             payload_any: Any = {
-                "cash": 100,
+                "cash": GAME_DEFAULT_SAVE_CASH,
                 "objects": [],
             }
         else:
@@ -134,7 +143,7 @@ class Data:
             obj.destroy()
 
         self.game.objects = []
-        self.cash = int(payload.get("cash", 100))
+        self.cash = int(payload.get("cash", GAME_LOAD_FALLBACK_CASH))
         self.statistics.load_file(self._statistics_path(path))
 
         raw_objects: list[Any] = payload.get("objects", [])
